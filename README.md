@@ -1,5 +1,5 @@
 # Snake + +
-
+![Logo](/assets/images/snekpp.jpg)
 
 ## Tutoriale i dokumentacja
 
