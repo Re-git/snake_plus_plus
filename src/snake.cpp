@@ -22,7 +22,7 @@ void Snake::update()
 void Snake::draw()
 {
     // Rysujemy snake'a
-    for (size_t i = 0; i < tail.size(); ++i)
+    for (std::size_t i = 0; i < tail.size(); ++i)
     {
         DrawRectangle(tail[i].x, tail[i].y, 4, 4, GREEN);
     }
