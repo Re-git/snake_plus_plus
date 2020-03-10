@@ -1,3 +1,2 @@
-# SNAKE + +
-
-## Jak to zainstalować?
+# snake_plus_plus
+Snake++
