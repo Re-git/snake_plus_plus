@@ -8,7 +8,7 @@
 
 ## Wymagania do pracy nad projektem:
 
-1. Zainstaluj kompilator c++ Mingw 64 [Download](http://win-builds.org/doku.php)
+1. Zainstaluj kompilator c++ Mingw 64 [Download](https://www.msys2.org)
 2. Upewnij się, że kompilator jest dodany do PATH. Uruchom okno lini poleceń i wpisz `g++` jeśli otrzymasz informacje zwrotną `g++: fatal error: no input files
 compilation terminated.` to wszystko gra
 3. Uruchom skrypt compile.bat - gra powinna się skompilować i uruchomić. Jeśli zadziałało to super. Witamy. Jeśli nie to napisz, że masz problem i co się dzieje.
