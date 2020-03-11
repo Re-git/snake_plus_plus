@@ -34,7 +34,7 @@ void Malpa::moveTo(Vector2 vec, float speed)
 {
     Vector2 force = Vector2Subtract(vec, position); 
     force = Vector2Normalize(force);
-    force = Vector2MultiplyV(force, Vector2{speed,speed});
+    force = Vector2Scale(force, speed);
     acceleration = Vector2Add(force, acceleration);
 }
 
