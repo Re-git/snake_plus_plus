@@ -9,16 +9,18 @@
 class Snake
 {
 public:
-    Vector2 position = {100, 100};
-    Vector2 velocity = {0, 0};
+    Vector2 position;
+    Vector2 velocity;
+    Vector2 acceleration;
     std::vector<Vector2> tail;
 
     Snake(int length);
 
     void update();
     void draw();
-    bool checkCollisionWithEdges(Vector2 &v);
-    void limit(Vector2 &v, float num);
+    void move();
+    bool checkCollisionWithEdges(Vector2&);
+    void limit(Vector2&, float);
 };
 
 #endif

@@ -10,13 +10,17 @@
 class Malpa
 {
 public:
-    Vector2 position = {100, 100};
-    Vector2 velocity = {0, 0};
+    Vector2 position;
+    Vector2 velocity;
+    Vector2 acceleration;
     int size;
 
     Malpa();
     void draw();
     void update();
+    void move();
+    void moveTo(Vector2, float);
+    void limit(Vector2&, float);
 };
 
 #endif

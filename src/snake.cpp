@@ -2,6 +2,10 @@
 
 Snake::Snake(int length)
 {
+    position.x = GetScreenWidth() / static_cast<float>(2.0);
+    position.y = GetScreenHeight() / static_cast<float>(2.0);
+    velocity = Vector2{0,0};
+    acceleration = Vector2{0,0};
     for (int i = 0; i < length; ++i)
     {
         tail.push_back(Vector2{position.x, position.y});
@@ -11,11 +15,11 @@ Snake::Snake(int length)
 
 void Snake::update()
 {
-    position = Vector2Add(position, velocity);
-    limit(velocity, 4);
     checkCollisionWithEdges(position);
     tail.insert(tail.begin(), Vector2{position.x, position.y});
     tail.erase(tail.end() - 1);
+    move();
+    limit(velocity, 4);
 }
 
 
@@ -28,6 +32,11 @@ void Snake::draw()
     }
 }
 
+void Snake::move()
+{
+    velocity = Vector2Add(acceleration,velocity);
+    position = Vector2Add(velocity,position);
+}
 
 bool Snake::checkCollisionWithEdges(Vector2 &v)
 {
