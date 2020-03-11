@@ -36,13 +36,13 @@ int main(void)
   {
     // KEYBOARD INPUT
     if (IsKeyDown(KEY_RIGHT))
-      snake.velocity.x += .2;
+      snake.acceleration.x += .2;
     if (IsKeyDown(KEY_LEFT))
-      snake.velocity.x += -.2;
+      snake.acceleration.x += -.2;
     if (IsKeyDown(KEY_UP))
-      snake.velocity.y += -.2;
+      snake.acceleration.y += -.2;
     if (IsKeyDown(KEY_DOWN))
-      snake.velocity.y += .2;
+      snake.acceleration.y += .2;
 
     // DRAWING
     BeginDrawing();
