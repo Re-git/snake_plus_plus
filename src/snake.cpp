@@ -36,6 +36,7 @@ void Snake::move()
 {
     velocity = Vector2Add(acceleration,velocity);
     position = Vector2Add(velocity,position);
+    acceleration = Vector2Zero();
 }
 
 bool Snake::checkCollisionWithEdges(Vector2 &v)
