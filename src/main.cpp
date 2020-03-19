@@ -21,7 +21,7 @@ int main(void)
   SetWindowPosition(windowPosition.x, windowPosition.y);
   srand(time(NULL));
   
-  const int numberOfMonkeys = 25;
+  const int numberOfMonkeys = 55;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
 
@@ -49,7 +49,8 @@ int main(void)
     ClearBackground(BLACK);
     for (int i = 0; i < numberOfMonkeys; i++)
     {
-      monkeyList[i].moveTo(snake.position, 0.2);
+      monkeyList[i].applyBehaviors(monkeyList, snake.position);
+      // monkeyList[i].moveTo(snake.position, 0.2);
       monkeyList[i].update();
     }
     snake.update();
