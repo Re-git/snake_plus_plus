@@ -2,12 +2,14 @@
 #include "stdlib.h"
 #include <ctime>
 #include <vector>
+#include <iostream>
 // Import raylib
 #include "libs/raylib.h"
 #include "libs/raymath.h"
 // Import naszych nagłówków
 #include "monkey.h"
 #include "snake.h"
+#include "timer.h"
 
 
 int main(void)
@@ -20,8 +22,9 @@ int main(void)
   Vector2 windowPosition = {100, 100};
   SetWindowPosition(windowPosition.x, windowPosition.y);
   srand(time(NULL));
+
   
-  const int numberOfMonkeys = 55;
+  int numberOfMonkeys = 1;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
 
@@ -50,9 +53,19 @@ int main(void)
     for (int i = 0; i < numberOfMonkeys; i++)
     {
       monkeyList[i].applyBehaviors(monkeyList, snake.position);
-      // monkeyList[i].moveTo(snake.position, 0.2);
       monkeyList[i].update();
     }
+
+
+  static Timer timer(2000);
+  if (timer.isReady())
+    {
+        monkeyList.push_back(Malpa());
+        numberOfMonkeys++;
+        timer.reset();
+    }
+    
+    std::cout << "Ilosc malpek: " << numberOfMonkeys << std::endl;  // Wypisz w konsoli ilosc malp na ekranie
     snake.update();
     snake.draw();
     EndDrawing();

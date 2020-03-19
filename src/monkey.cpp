@@ -9,8 +9,8 @@ Malpa::Malpa()
     acceleration = Vector2{0,0};
     size = 20;
     r = 12;
-    maxspeed = (rand() % 2) + 3;
-    maxforce = 0.2;
+    maxspeed = (rand() % 3) + 1;   // daje wartosci od 3 do 6. Niektóre małpy będą szybsze niż inne.
+    maxforce = 0.5;
 
 }
 
