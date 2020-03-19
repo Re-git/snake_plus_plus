@@ -15,9 +15,10 @@ public:
     Vector2 velocity;
     Vector2 acceleration;
     int size;
-    float r;
-    float maxforce;    // Maximum steering force
-    float maxspeed;    // Maximum speed
+    float separationRange;
+    float maxspeed;      // Maximum speed
+    float maxSeparationForce; // siła odpychania się między małpkami
+    float maxSeekForce;
 
     Malpa();
     void draw();

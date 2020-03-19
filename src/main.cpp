@@ -57,13 +57,13 @@ int main(void)
     }
 
 
-  static Timer timer(2000); // tworzymy timer i ustawiamy go na 2 sekundy
-  if (timer.isReady())       // sprawdzamy czy już minęły 2 sek
+  static Timer timer(500); // tworzymy timer i ustawiamy go na 0.5 sekundy
+  if (timer.isReady())       // sprawdzamy czy już minęły 0.5 sek
     {
       std::cout << timer.isReady() << std::endl;
         monkeyList.push_back(Malpa());
         numberOfMonkeys++;
-        timer.reset();        // resetujemy stoper i zaczynamy liczyć 2 sek od początku
+        timer.reset();        // resetujemy stoper i zaczynamy liczyć 0.5 sek od początku
     }
     
     // std::cout << "Ilosc malpek: " << numberOfMonkeys << std::endl;  // Wypisz w konsoli ilosc malp na ekranie
