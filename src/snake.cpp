@@ -19,7 +19,7 @@ void Snake::update()
     tail.insert(tail.begin(), Vector2{position.x, position.y});
     tail.erase(tail.end() - 1);
     move();
-    limit(velocity, 4);
+    limit(velocity, 8);
 }
 
 

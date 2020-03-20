@@ -12,13 +12,15 @@
 #include "timer.h"
 #include "Fruits.h"
 
-enum GameState {mainMenu, inGame, deathScreen} gameState;
+enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
 
 int main(void)
 {
-  const int screenWidth = 800;
-  const int screenHeight = 800;
+  int screenWidth = 1200;
+  int screenHeight = 800;
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   gameState = mainMenu;
+  int text_size;
   SetTargetFPS(60);
   // CREATE WINDOW
   InitWindow(screenWidth, screenHeight, "Snake");
@@ -36,6 +38,8 @@ int main(void)
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
   {
+    screenWidth = GetScreenWidth();
+    screenHeight = GetScreenHeight();
     switch (gameState)
     {
     case mainMenu:
@@ -45,7 +49,8 @@ int main(void)
       // DRAWING
       BeginDrawing();
       ClearBackground(BROWN);
-      DrawText("PRESS ENTER",screenWidth/2-100,screenHeight/2, 30,BLACK);
+      text_size = MeasureText("PRESS ENTER",30);
+      DrawText("PRESS ENTER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
       EndDrawing();
     break;
 
@@ -60,8 +65,10 @@ int main(void)
       // DRAWING
         BeginDrawing();
         ClearBackground(WHITE);
-        DrawText("GAME OVER",screenWidth/2-100,screenHeight/2, 30,BLACK);
-        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2-100,screenHeight/2+30, 20,BLACK);
+        text_size = MeasureText("GAME OVER",30);
+        DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
+        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
+        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+30, 20,BLACK);
         EndDrawing();
     break;
 

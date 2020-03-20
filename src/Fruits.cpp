@@ -4,8 +4,8 @@ Fruits::Fruits() {
     moveFruit();
 }
 void Fruits::moveFruit() {
-    position.x=((int)std::abs(rand()%(800-FRUIT_SIZE)));
-    position.y=((int)std::abs(rand()%(800-FRUIT_SIZE)));
+    position.x=((int)std::abs(rand()%(GetScreenWidth()-FRUIT_SIZE)));
+    position.y=((int)std::abs(rand()%(GetScreenHeight()-FRUIT_SIZE)));
     collisionMask= {position.x,position.y,FRUIT_SIZE,FRUIT_SIZE};
 }
 void Fruits::draw()
