@@ -7,7 +7,8 @@ Malpa::Malpa()
     position.y = rand() % GetScreenHeight();
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};
-    size = 20;
+    size_width = 20.0;
+    size_height = 20.0;
     separationRange = 30;              // odległość jaką małpki starają się utrzymać pomiędzy sobą
     maxspeed = (rand() % 3) + 1;     // max prędkość danej małpki
     maxSeparationForce = 0.1;       // siła odpychania się między małpkami
@@ -18,7 +19,8 @@ Malpa::Malpa()
 
 void Malpa::draw()
 {
-    DrawText("@", position.x, position.y, size, RED);
+    narysowana_malpa = {position.x,position.y,size_width,size_height};
+    DrawRectangleRec(narysowana_malpa,RED);
 }
 
 void Malpa::update()
