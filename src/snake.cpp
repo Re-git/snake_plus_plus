@@ -28,8 +28,7 @@ void Snake::draw()
     // Rysujemy snake'a
     for (std::size_t i = 0; i < tail.size(); ++i)
     {
-         narysowany_snek = {tail[i].x, tail[i].y, 4, 4};	
-        DrawRectangleRec(narysowany_snek,GREEN);
+        DrawRectangleRec({tail[i].x, tail[i].y, 4, 4},GREEN);
     }
 }
 

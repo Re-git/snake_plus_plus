@@ -13,7 +13,6 @@ public:
     Vector2 velocity;
     Vector2 acceleration;
     std::vector<Vector2> tail;
-    Rectangle narysowany_snek;
     Snake(int length);
 
     void update();

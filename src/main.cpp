@@ -31,7 +31,6 @@ int main(void)
   std::vector<Malpa> monkeyList;
   Snake snake(15);
   Fruits fruit;
-  bool collision = false;
 
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
@@ -54,6 +53,7 @@ int main(void)
       // CLEANUP
       monkeyList.clear();
       snake = Snake(15);
+      fruit.moveFruit();
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER))
         gameState = inGame;
@@ -84,8 +84,7 @@ int main(void)
       {
         m.applyBehaviors(monkeyList, snake.position);
         m.update();
-        collision = CheckCollisionRecs(snake.narysowany_snek, m.narysowana_malpa);
-        if (collision) 
+        if (snake.collide(m.narysowana_malpa)) 
         {
           gameState = deathScreen;
         }
