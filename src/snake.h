@@ -21,6 +21,7 @@ public:
     void move();
     bool checkCollisionWithEdges(Vector2&);
     void limit(Vector2&, float);
+    bool collide(Rectangle rec);
 };
 
 #endif

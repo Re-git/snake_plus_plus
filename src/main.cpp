@@ -8,6 +8,7 @@
 // Import naszych nagłówków
 #include "monkey.h"
 #include "snake.h"
+#include "Fruits.h"
 
 
 int main(void)
@@ -24,6 +25,7 @@ int main(void)
   const int numberOfMonkeys = 55;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
+  Fruits fruit;
 
   // wypelniamy liste malp Malpami
   for (int i = 0; i < numberOfMonkeys; i++)
@@ -43,7 +45,8 @@ int main(void)
       snake.acceleration.y += -.2;
     if (IsKeyDown(KEY_DOWN))
       snake.acceleration.y += .2;
-
+    if(snake.collide(fruit.collisionMask))
+            fruit.moveFruit();
     // DRAWING
     BeginDrawing();
     ClearBackground(BLACK);
@@ -55,6 +58,7 @@ int main(void)
     }
     snake.update();
     snake.draw();
+    fruit.draw();
     EndDrawing();
   }
   // CLEANUP
