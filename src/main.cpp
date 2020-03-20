@@ -13,8 +13,6 @@
 #include "Fruits.h"
 
 
-
-
 int main(void)
 {
   const int screenWidth = 800;
@@ -27,10 +25,11 @@ int main(void)
   srand(time(NULL));
 
   
-  int numberOfMonkeys = 1;
+  int numberOfMonkeys = 10;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
   Fruits fruit;
+  bool collision = false;
 
   // wypelniamy liste malp Malpami
   for (int i = 0; i < numberOfMonkeys; i++)
@@ -59,6 +58,13 @@ int main(void)
     {
       monkeyList[i].applyBehaviors(monkeyList, snake.position);
       monkeyList[i].update();
+      collision = CheckCollisionRecs(snake.narysowany_snek,monkeyList[i].narysowana_malpa);
+      if (collision) 
+      {
+      ClearBackground(WHITE);
+      DrawText("GAME OVER",screenWidth/2-100,screenHeight/2, 30,BLACK);
+      // po kolizji moze prowadzic do nieistniejacego jeszcze ekranu smierci/highscrow x)
+      }
     }
 
 
@@ -81,3 +87,4 @@ int main(void)
   CloseWindow();
   return 0;
 }
+

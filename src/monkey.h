@@ -14,11 +14,12 @@ public:
     Vector2 position;
     Vector2 velocity;
     Vector2 acceleration;
-    int size;
+    float size_width, size_height;
     float separationRange;
     float maxspeed;      // Maximum speed
     float maxSeparationForce; // siła odpychania się między małpkami
     float maxSeekForce;
+    Rectangle narysowana_malpa;
 
     Malpa();
     void draw();
