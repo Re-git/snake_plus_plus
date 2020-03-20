@@ -26,17 +26,11 @@ int main(void)
   srand(time(NULL));
 
   // INITIALIZE VARIABLES
-  int numberOfMonkeys = 10;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
   Fruits fruit;
   bool collision = false;
 
-  // wypelniamy liste malp Malpami
-  for (int i = 0; i < numberOfMonkeys; i++)
-  {
-    monkeyList.push_back(Malpa());
-  }
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
@@ -55,11 +49,11 @@ int main(void)
     // DRAWING
     BeginDrawing();
     ClearBackground(BLACK);
-    for (int i = 0; i < numberOfMonkeys; i++)
+    for (Malpa &m : monkeyList)  // for every monkey in monkey list
     {
-      monkeyList[i].applyBehaviors(monkeyList, snake.position);
-      monkeyList[i].update();
-      collision = CheckCollisionRecs(snake.narysowany_snek,monkeyList[i].narysowana_malpa);
+      m.applyBehaviors(monkeyList, snake.position);
+      m.update();
+      collision = CheckCollisionRecs(snake.narysowany_snek, m.narysowana_malpa);
       if (collision) 
       {
       ClearBackground(WHITE);
@@ -74,7 +68,6 @@ int main(void)
     {
       std::cout << timer.isReady() << std::endl;
         monkeyList.push_back(Malpa());
-        numberOfMonkeys++;
         timer.reset();        // resetujemy stoper i zaczynamy liczyć 0.5 sek od początku
     }
     
