@@ -8,9 +8,10 @@ Malpa::Malpa()
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};
     size = 20;
-    r = 12;
-    maxspeed = (rand() % 2) + 3;
-    maxforce = 0.2;
+    separationRange = 30;              // odległość jaką małpki starają się utrzymać pomiędzy sobą
+    maxspeed = (rand() % 3) + 1;     // max prędkość danej małpki
+    maxSeparationForce = 0.1;       // siła odpychania się między małpkami
+    maxSeekForce = 0.03;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
 
 }
 
@@ -67,7 +68,7 @@ Vector2 Malpa::seek(Vector2 target) {
     desired = Vector2Scale(desired,maxspeed);
     // Steering = Desired minus velocity
     Vector2 steer = Vector2Subtract(desired,velocity);
-    limit(steer, maxforce);
+    limit(steer, maxSeekForce);
     
     return steer;
   }
@@ -75,14 +76,13 @@ Vector2 Malpa::seek(Vector2 target) {
   // Separation
   // Method checks for nearby malpy and steers away
   Vector2 Malpa::separate (std::vector<Malpa> malpy) {
-    float desiredseparation = r*2;
     Vector2 sum{0,0};
     int count = 0;
     // For every malpa in the system, check if it's too close
     for (Malpa other : malpy) { 
       float d = Vector2Distance(position, other.position);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < desiredseparation)) {
+      if ((d > 0) && (d < separationRange)) {
         // Calculate vector pointing away from neighbor
         Vector2 diff = Vector2Subtract(position, other.position);
         diff = Vector2Normalize(diff);
@@ -99,7 +99,7 @@ Vector2 Malpa::seek(Vector2 target) {
       sum = Vector2Scale(sum, maxspeed);
       // Implement Reynolds: Steering = Desired - Velocity
       sum = Vector2Subtract(sum, velocity);
-      limit(sum, maxforce);
+      limit(sum, maxSeparationForce);
     }
     return sum;
   }
