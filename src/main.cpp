@@ -2,14 +2,12 @@
 #include "stdlib.h"
 #include <ctime>
 #include <vector>
-#include <iostream>
 // Import raylib
 #include "libs/raylib.h"
 #include "libs/raymath.h"
 // Import naszych nagłówków
 #include "monkey.h"
 #include "snake.h"
-#include "timer.h"
 
 
 int main(void)
@@ -22,15 +20,18 @@ int main(void)
   Vector2 windowPosition = {100, 100};
   SetWindowPosition(windowPosition.x, windowPosition.y);
   srand(time(NULL));
-
   
-  int numberOfMonkeys = 1;
+  const int numberOfMonkeys = 100;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
+  // Malpa pojedyncza_malpa;
+  // Rectangle boxCollision = { 0 };
+  bool collision = false;
 
   // wypelniamy liste malp Malpami
   for (int i = 0; i < numberOfMonkeys; i++)
   {
+    //pojedyncza_malpa.draw();
     monkeyList.push_back(Malpa());
   }
 
@@ -46,29 +47,46 @@ int main(void)
       snake.acceleration.y += -.2;
     if (IsKeyDown(KEY_DOWN))
       snake.acceleration.y += .2;
+    
+    // kolizja 
+    // collision = CheckCollisionRecs(snake.narysowany_snek,pojedyncza_malpa.narysowana_malpa);  
+    // if (collision) boxCollision = GetCollisionRec(snake.narysowany_snek, pojedyncza_malpa.narysowana_malpa);
 
     // DRAWING
     BeginDrawing();
     ClearBackground(BLACK);
+    // pojedyncza_malpa.draw();
+
     for (int i = 0; i < numberOfMonkeys; i++)
     {
       monkeyList[i].applyBehaviors(monkeyList, snake.position);
+     // monkeyList[i].moveTo(snake.position, 0.2);
       monkeyList[i].update();
+      collision = CheckCollisionRecs(snake.narysowany_snek,monkeyList[i].narysowana_malpa);
+      
+      // pojedyncza_malpa.applyBehaviors(monkeyList,snake.position);
+      // pojedyncza_malpa.update();
+
+      if (collision) 
+      {
+      ClearBackground(WHITE);
+      DrawText("GAME OVER",screenWidth/2-100,screenHeight/2, 30,BLACK);
+      // po kolizji moze prowadzic do nieistniejacego jeszcze ekranu smierci/highscrow x)
+      // DrawRectangleRec(boxCollision, LIME);
+      }
     }
 
-
-  static Timer timer(500); // tworzymy timer i ustawiamy go na 0.5 sekundy
-  if (timer.isReady())       // sprawdzamy czy już minęły 0.5 sek
-    {
-      std::cout << timer.isReady() << std::endl;
-        monkeyList.push_back(Malpa());
-        numberOfMonkeys++;
-        timer.reset();        // resetujemy stoper i zaczynamy liczyć 0.5 sek od początku
-    }
-    
-    // std::cout << "Ilosc malpek: " << numberOfMonkeys << std::endl;  // Wypisz w konsoli ilosc malp na ekranie
     snake.update();
     snake.draw();
+
+    //warunek kolizyjny zewnetrzna opcja
+    // if (collision) 
+    // {
+      // ClearBackground(WHITE);
+      // DrawText("GAME OVER",screenWidth/2,screenHeight/2, 30,BLACK);
+      // DrawRectangleRec(boxCollision, LIME);
+    // }
+
     EndDrawing();
   }
   // CLEANUP

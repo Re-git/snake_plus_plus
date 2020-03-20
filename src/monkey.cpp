@@ -7,18 +7,20 @@ Malpa::Malpa()
     position.y = rand() % GetScreenHeight();
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};
-    size = 20;
-    separationRange = 30;              // odległość jaką małpki starają się utrzymać pomiędzy sobą
-    maxspeed = (rand() % 3) + 1;     // max prędkość danej małpki
-    maxSeparationForce = 0.1;       // siła odpychania się między małpkami
-    maxSeekForce = 0.03;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
+    size_width = 20.0;
+    size_height = 20.0;
+    r = 12;
+    maxspeed = (rand() % 2) + 3;
+    maxforce = 0.2;
 
 }
 
 
 void Malpa::draw()
 {
-    DrawText("@", position.x, position.y, size, RED);
+    // DrawText("@", position.x, position.y, size, RED);
+    narysowana_malpa = {position.x,position.y,size_width,size_height};
+    DrawRectangleRec(narysowana_malpa,RED);
 }
 
 void Malpa::update()
@@ -68,7 +70,7 @@ Vector2 Malpa::seek(Vector2 target) {
     desired = Vector2Scale(desired,maxspeed);
     // Steering = Desired minus velocity
     Vector2 steer = Vector2Subtract(desired,velocity);
-    limit(steer, maxSeekForce);
+    limit(steer, maxforce);
     
     return steer;
   }
@@ -76,13 +78,14 @@ Vector2 Malpa::seek(Vector2 target) {
   // Separation
   // Method checks for nearby malpy and steers away
   Vector2 Malpa::separate (std::vector<Malpa> malpy) {
+    float desiredseparation = r*2;
     Vector2 sum{0,0};
     int count = 0;
     // For every malpa in the system, check if it's too close
     for (Malpa other : malpy) { 
       float d = Vector2Distance(position, other.position);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < separationRange)) {
+      if ((d > 0) && (d < desiredseparation)) {
         // Calculate vector pointing away from neighbor
         Vector2 diff = Vector2Subtract(position, other.position);
         diff = Vector2Normalize(diff);
@@ -91,6 +94,7 @@ Vector2 Malpa::seek(Vector2 target) {
         count++;            // Keep track of how many
       }
     }
+
     // Average -- divide by how many
     if (count > 0) {
       sum = Vector2Divide(sum,count);
@@ -99,7 +103,7 @@ Vector2 Malpa::seek(Vector2 target) {
       sum = Vector2Scale(sum, maxspeed);
       // Implement Reynolds: Steering = Desired - Velocity
       sum = Vector2Subtract(sum, velocity);
-      limit(sum, maxSeparationForce);
+      limit(sum, maxforce);
     }
     return sum;
   }
