@@ -59,3 +59,9 @@ void Snake::limit(Vector2 &v, float num)
     if (v.y > num)   {v.y = num;}
     if (v.y < -num) {v.y = -num;}
 }
+bool Snake::collide(Rectangle rec){
+    for (std::size_t i = 0; i < tail.size(); ++i){
+        if(CheckCollisionRecs(Rectangle{tail[i].x, tail[i].y, 4, 4}, rec)) return true;
+    }
+    return false;
+}

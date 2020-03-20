@@ -10,6 +10,9 @@
 #include "monkey.h"
 #include "snake.h"
 #include "timer.h"
+#include "Fruits.h"
+
+
 
 
 int main(void)
@@ -27,6 +30,7 @@ int main(void)
   int numberOfMonkeys = 1;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
+  Fruits fruit;
 
   // wypelniamy liste malp Malpami
   for (int i = 0; i < numberOfMonkeys; i++)
@@ -46,7 +50,8 @@ int main(void)
       snake.acceleration.y += -.2;
     if (IsKeyDown(KEY_DOWN))
       snake.acceleration.y += .2;
-
+    if(snake.collide(fruit.collisionMask))
+            fruit.moveFruit();
     // DRAWING
     BeginDrawing();
     ClearBackground(BLACK);
@@ -69,6 +74,7 @@ int main(void)
     // std::cout << "Ilosc malpek: " << numberOfMonkeys << std::endl;  // Wypisz w konsoli ilosc malp na ekranie
     snake.update();
     snake.draw();
+    fruit.draw();
     EndDrawing();
   }
   // CLEANUP
