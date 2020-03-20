@@ -22,9 +22,10 @@ int main(void)
   InitWindow(screenWidth, screenHeight, "Snake");
   Vector2 windowPosition = {100, 100};
   SetWindowPosition(windowPosition.x, windowPosition.y);
+  // START RANDOM NUMBER GENERATOR
   srand(time(NULL));
 
-  
+  // INITIALIZE VARIABLES
   int numberOfMonkeys = 10;
   std::vector<Malpa> monkeyList;
   Snake snake(10);
