@@ -29,6 +29,7 @@ void Malpa::draw()
 }
 
 void Malpa::update()
+
 {
     // Update velocity
     velocity = Vector2Add(velocity, acceleration);

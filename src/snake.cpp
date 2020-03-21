@@ -58,7 +58,7 @@ bool Snake::checkCollisionWithEdges(Vector2 &pos)
     int width = GetScreenWidth();
     int height = GetScreenHeight();
     bool collide = false;
-    std::cout << angle << std::endl;
+    std::cout << "SNAKE ANGLE:" << angle << std::endl;
     if (pos.x > width-8)  {pos.x = width-8;  if(angle>PI) angle=angle-PI+2*angle; else angle=PI-angle;  collide=true;}
     if (pos.x < 4)        {pos.x = 4;        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true;}
     if (pos.y > height-7) {pos.y = height-7;  if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true;}
