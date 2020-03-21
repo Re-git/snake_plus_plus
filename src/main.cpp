@@ -18,6 +18,7 @@ int main(void)
 {
   int screenWidth = 1200;
   int screenHeight = 800;
+  static int frameCounter, points;
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   gameState = mainMenu;
   int text_size;
@@ -59,6 +60,7 @@ int main(void)
       monkeyList.clear();
       snake = Snake(15);
       fruit.moveFruit();
+      frameCounter = 0;
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER))
         gameState = inGame;
@@ -73,17 +75,43 @@ int main(void)
     break;
 
     case inGame:
+      frameCounter++;
       if(snake.collide(fruit.collisionMask))
       {
+          points+=10;
           fruit.moveFruit();
           for (size_t i = 0; i < 5; i++)
           {
             snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
           }                
       }
+
+      // niezjedzone jedzenie znika po 10 s
+      static Timer niezjedzone(10000);
+      if(niezjedzone.isReady())
+      {
+        fruit.moveFruit();
+        niezjedzone.reset();
+      }
+
+
       // DRAWING
       BeginDrawing();
       ClearBackground(BLACK);
+      
+      // RAMKA - PRZESTRZEŃ GRY
+      DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
+      DrawText(TextFormat("PUNKTY: %d",points),40,10,35,PURPLE);
+      DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,10,35,PURPLE);
+
+      // 1 punkt za 5 sekund przezycia
+      static Timer czas_punktowy(5000);      //5 sekund czasu gry
+      if(czas_punktowy.isReady()) 
+      {
+      points++;
+      czas_punktowy.reset(); 
+      }
+      
       for (Malpa &m : monkeyList)  // for every monkey in monkey list
       {
         m.applyBehaviors(monkeyList, snake.position);
@@ -91,15 +119,17 @@ int main(void)
         if (snake.collide(m.narysowana_malpa)) 
         {
           gameState = deathScreen;
+          frameCounter = 0;
+          points = 0;
         }
       }
 
 
-    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekundy
-    if (timer.isReady())       // sprawdzamy czy już minęły 0.5 sek
+    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekund
+    if (timer.isReady())       // sprawdzamy czy już minęło 0.5 sek
       {
           monkeyList.push_back(Malpa());
-          timer.reset();        // resetujemy stoper i zaczynamy liczyć 0.5 sek od początku
+          timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
       
 

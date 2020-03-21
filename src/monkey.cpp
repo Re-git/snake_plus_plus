@@ -4,7 +4,7 @@
 Malpa::Malpa()
 {
     position.x = rand() % GetScreenWidth();
-    position.y = rand() % GetScreenHeight();
+    position.y = rand() % GetScreenHeight()-150;                  //trzeba lepiej dostosowac do ramki
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};
     size_width = 20.0;
