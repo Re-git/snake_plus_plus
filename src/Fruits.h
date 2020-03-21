@@ -10,9 +10,12 @@ const int FRUIT_SIZE=25;
 
 class Fruits {
 public:
+    int topMargin;
+    int leftMargin;
+    int botMargin;
     Rectangle collisionMask;
     Vector2 position;
-    Fruits();
+    Fruits(int topMargin,int leftMargin, int botMargin);
     void moveFruit();
     void draw();
     void update();

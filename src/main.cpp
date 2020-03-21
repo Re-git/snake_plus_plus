@@ -12,10 +12,15 @@
 #include "timer.h"
 #include "Fruits.h"
 
+
 enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
 
-int main(void)
-{
+int main(void){
+  static Timer niezjedzone(10000);
+  static Timer czas_punktowy(5000);      //5 sekund czasu gry
+  const int topMargin=65;
+  const int leftMargin=9;
+  const int botMargin=4;
   int screenWidth = 1200;
   int screenHeight = 800;
   static int frameCounter, points;
@@ -33,9 +38,9 @@ int main(void)
   // INITIALIZE VARIABLES
   std::vector<Malpa> monkeyList;
   Snake snake(15);
-  Fruits fruit;
+  Fruits fruit(topMargin,leftMargin,botMargin);
 
-
+    std::cout<<"wysokosc "<<GetScreenHeight()<<"szerokosc "<<GetScreenWidth();
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
   {
@@ -45,8 +50,10 @@ int main(void)
     {
     case mainMenu:
       // KEYBOARD INPUT
-      if (IsKeyDown(KEY_ENTER))
+      if (IsKeyDown(KEY_ENTER)){
         gameState = inGame;
+        niezjedzone.reset();
+        czas_punktowy.reset();}
       // DRAWING
       ClearBackground(BROWN);
       BeginDrawing();
@@ -61,9 +68,7 @@ int main(void)
       snake = Snake(15);
       fruit.moveFruit();
       frameCounter = 0;
-      // KEYBOARD INPUT
-      if (IsKeyDown(KEY_ENTER))
-        gameState = inGame;
+
       // DRAWING
       while (gameState == deathScreen)
       {
@@ -75,30 +80,33 @@ int main(void)
         DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+30, 20,BLACK);
         EndDrawing();
       // KEYBOARD INPUT
-        if (IsKeyDown(KEY_ENTER))
+        if (IsKeyDown(KEY_ENTER)){
           gameState = inGame;
+          niezjedzone.reset();
+          czas_punktowy.reset();}
       }
     break;
 
     case inGame:
       frameCounter++;
-      if(snake.collide(fruit.collisionMask))
+            // niezjedzone jedzenie znika po 10 s
+            if(niezjedzone.isReady())
+            {
+                fruit.moveFruit();
+                niezjedzone.reset();
+            }
+
+            if(snake.collide(fruit.collisionMask))
       {
           points+=10;
           fruit.moveFruit();
+          niezjedzone.reset();
           for (size_t i = 0; i < 5; i++)
           {
             snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
           }                
       }
 
-      // niezjedzone jedzenie znika po 10 s
-      static Timer niezjedzone(10000);
-      if(niezjedzone.isReady())
-      {
-        fruit.moveFruit();
-        niezjedzone.reset();
-      }
 
 
       // DRAWING
@@ -111,8 +119,8 @@ int main(void)
       DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,10,35,PURPLE);
 
       // 1 punkt za 5 sekund przezycia
-      static Timer czas_punktowy(5000);      //5 sekund czasu gry
-      if(czas_punktowy.isReady()) 
+
+      if(czas_punktowy.isReady())
       {
       points++;
       czas_punktowy.reset(); 

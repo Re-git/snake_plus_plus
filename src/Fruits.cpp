@@ -1,11 +1,16 @@
 
 #include "Fruits.h"
-Fruits::Fruits() {
+Fruits::Fruits(int tMargin,int lMargin, int bMargin) {
+    topMargin=tMargin;
+    leftMargin=lMargin;
+    botMargin=bMargin;
     moveFruit();
+
 }
 void Fruits::moveFruit() {
-    position.x=((int)std::abs(rand()%(GetScreenWidth()-FRUIT_SIZE)));
-    position.y=((int)std::abs(rand()%(GetScreenHeight()-200-FRUIT_SIZE)));
+
+    position.x=((int)std::abs(leftMargin+rand()%(GetScreenWidth()-(leftMargin+FRUIT_SIZE))));
+    position.y=((int)std::abs(topMargin+rand()%(GetScreenHeight()-(botMargin+FRUIT_SIZE+topMargin))));
     collisionMask= {position.x,position.y,FRUIT_SIZE,FRUIT_SIZE};
 }
 void Fruits::draw()
