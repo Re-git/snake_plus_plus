@@ -21,7 +21,7 @@ Malpa::Malpa()
 void Malpa::draw()
 {
     monkeyRec = {position.x,position.y,width, height};
-    // DrawRectangleRec(monkeyRec,RED);
+    DrawRectangleRec(monkeyRec,RED);
     DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
                                      monkeyRec,
                                      {(float)((width)/2), (float)((height)/2)},
