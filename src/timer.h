@@ -1,3 +1,6 @@
+#ifndef TIMER_H
+#define TIMER_H
+
 #include <ctime>
 
 class Timer
@@ -51,3 +54,5 @@ unsigned long Timer::getTime()
 {
     return timeCounter;
 }
+
+#endif

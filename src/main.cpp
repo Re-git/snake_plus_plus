@@ -73,17 +73,14 @@ int main(void)
     break;
 
     case inGame:
-      // KEYBOARD INPUT
-      if (IsKeyDown(KEY_RIGHT))
-        snake.acceleration.x += .2;
-      if (IsKeyDown(KEY_LEFT))
-        snake.acceleration.x += -.2;
-      if (IsKeyDown(KEY_UP))
-        snake.acceleration.y += -.2;
-      if (IsKeyDown(KEY_DOWN))
-        snake.acceleration.y += .2;
       if(snake.collide(fruit.collisionMask))
-              fruit.moveFruit();
+      {
+          fruit.moveFruit();
+          for (size_t i = 0; i < 5; i++)
+          {
+            snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
+          }                
+      }
       // DRAWING
       BeginDrawing();
       ClearBackground(BLACK);
@@ -98,15 +95,16 @@ int main(void)
       }
 
 
-    static Timer timer(500); // tworzymy timer i ustawiamy go na 0.5 sekundy
+    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekundy
     if (timer.isReady())       // sprawdzamy czy już minęły 0.5 sek
       {
-        std::cout << timer.isReady() << std::endl;
           monkeyList.push_back(Malpa());
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 0.5 sek od początku
       }
       
-      // std::cout << "Ilosc malpek: " << numberOfMonkeys << std::endl;  // Wypisz w konsoli ilosc malp na ekranie
+
+
+      snake.handleInput();
       snake.update();
       snake.draw();
       fruit.draw();

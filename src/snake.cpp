@@ -1,11 +1,13 @@
 #include "snake.h"
 
+
 Snake::Snake(int length)
 {
     position.x = GetScreenWidth() / static_cast<float>(2.0);
     position.y = GetScreenHeight() / static_cast<float>(2.0);
-    velocity = Vector2{0,0};
-    acceleration = Vector2{0,0};
+    velocity = Vector2{1,0};
+    maxSpeed = 5;
+    turnRate = 0.2;
     for (int i = 0; i < length; ++i)
     {
         tail.push_back(Vector2{position.x, position.y});
@@ -15,11 +17,11 @@ Snake::Snake(int length)
 
 void Snake::update()
 {
-    checkCollisionWithEdges(position);
     tail.insert(tail.begin(), Vector2{position.x, position.y});
     tail.erase(tail.end() - 1);
     move();
-    limit(velocity, 8);
+    checkCollisionWithEdges(position);
+    limit(velocity, maxSpeed);
 }
 
 
@@ -34,20 +36,24 @@ void Snake::draw()
 
 void Snake::move()
 {
-    velocity = Vector2Add(acceleration,velocity);
+    float  vectorLength = Vector2Length(velocity);
+    velocity.x = cos(angle);      
+    velocity.y = sin(angle);
+    velocity = Vector2Normalize(velocity);
+    velocity = Vector2Scale(velocity, vectorLength);
     position = Vector2Add(velocity,position);
-    acceleration = Vector2Zero();
 }
 
-bool Snake::checkCollisionWithEdges(Vector2 &v)
+bool Snake::checkCollisionWithEdges(Vector2 &pos)
 {
     int width = GetScreenWidth();
     int height = GetScreenHeight();
     bool collide = false;
-    if (v.x > width)  {v.x = 0;    collide=true;}
-    if (v.x < 0)  {v.x = 800; collide=true;}
-    if (v.y > height) {v.y = 0;    collide=true;}
-    if (v.y < 0) {v.y = 800; collide=true;}
+    std::cout << angle << std::endl;
+    if (pos.x > width)  {pos.x = width;  if(angle>PI) angle=angle-PI+2*angle; else angle=PI-angle;  collide=true;}
+    if (pos.x < 0)        {pos.x = 0;        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true;}
+    if (pos.y > height) {pos.y = height;  if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true;}
+    if (pos.y < 0)        {pos.y = 0;        if(angle>1.5*PI) angle=angle-PI-(2*(angle-1.5*PI)); else angle=angle-PI+(2*(1.5*PI-angle));  collide=true;}
     return collide;
 }
 
@@ -65,3 +71,33 @@ bool Snake::collide(Rectangle rec){
     }
     return false;
 }
+void Snake::turn(float r)
+{
+    angle += r / (0.5 * Vector2Length(velocity));
+}
+
+void Snake::handleInput()
+{
+    // KEYBOARD INPUT
+      if (IsKeyDown(KEY_RIGHT))
+      {
+        turn(turnRate);
+      }
+      if (IsKeyDown(KEY_LEFT))
+      {
+        turn(-turnRate);
+      }
+      if (IsKeyDown(KEY_UP))
+      {
+          velocity = Vector2Scale(velocity, 1.3);
+      }
+      if (IsKeyDown(KEY_DOWN))
+      {
+        if (Vector2Length(velocity) > 2)
+        {
+            velocity = Vector2Scale(velocity, 0.95);
+        }
+      }
+}
+
+
