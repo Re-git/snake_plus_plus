@@ -9,6 +9,11 @@
 class Snake
 {
 public:
+    Texture2D sprite;
+    float headHeight;
+    float headWidth;
+    float bodyHeight;
+    float bodyWidth;
     Vector2 position;
     Vector2 velocity;
     float maxSpeed;

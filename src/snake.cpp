@@ -3,9 +3,14 @@
 
 Snake::Snake(int length)
 {
+    sprite = LoadTexture("assets/sprites/snake.png");  
+    headHeight = 30;
+    headWidth = 30; 
+    bodyHeight = 10;
+    bodyWidth = 10; 
     position.x = GetScreenWidth() / static_cast<float>(2.0);
     position.y = GetScreenHeight() / static_cast<float>(2.0);
-    velocity = Vector2{1,0};
+    velocity = Vector2{3,0};
     maxSpeed = 5;
     turnRate = 0.2;
     for (int i = 0; i < length; ++i)
@@ -28,10 +33,14 @@ void Snake::update()
 void Snake::draw()
 {
     // Rysujemy snake'a
-    for (std::size_t i = 0; i < tail.size(); ++i)
+    for (std::size_t i = 1; i < tail.size(); ++i)
     {
-        DrawRectangleRec({tail[i].x, tail[i].y, 4, 4},GREEN);
+        DrawRectangleRec({tail[i].x, tail[i].y, bodyWidth, bodyHeight},GREEN);
     }
+        DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
+                                     {position.x, position.y, headWidth, headHeight},
+                                     {(float)(10+(headWidth)/2), (float)((headHeight)/2)},
+                                     angle*RAD2DEG, WHITE);
 }
 
 void Snake::move()
@@ -67,7 +76,7 @@ void Snake::limit(Vector2 &v, float num)
 }
 bool Snake::collide(Rectangle rec){
     for (std::size_t i = 0; i < tail.size(); ++i){
-        if(CheckCollisionRecs(Rectangle{tail[i].x, tail[i].y, 4, 4}, rec)) return true;
+        if(CheckCollisionRecs(Rectangle{tail[i].x, tail[i].y, bodyWidth, bodyHeight}, rec)) return true;
     }
     return false;
 }

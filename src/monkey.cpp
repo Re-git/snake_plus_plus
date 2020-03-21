@@ -3,12 +3,13 @@
 
 Malpa::Malpa()
 {
+    sprite = LoadTexture("assets/sprites/monkey.png");
     position.x = rand() % GetScreenWidth();
     position.y = rand() % GetScreenHeight();
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};
-    size_width = 20.0;
-    size_height = 20.0;
+    width = 50;
+    height = 50;
     separationRange = 30;              // odległość jaką małpki starają się utrzymać pomiędzy sobą
     maxspeed = (rand() % 3) + 1;     // max prędkość danej małpki
     maxSeparationForce = 0.1;       // siła odpychania się między małpkami
@@ -19,8 +20,12 @@ Malpa::Malpa()
 
 void Malpa::draw()
 {
-    narysowana_malpa = {position.x,position.y,size_width,size_height};
-    DrawRectangleRec(narysowana_malpa,RED);
+    monkeyRec = {position.x,position.y,width, height};
+    // DrawRectangleRec(monkeyRec,RED);
+    DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
+                                     monkeyRec,
+                                     {(float)((width)/2), (float)((height)/2)},
+                                     0.0f, WHITE);
 }
 
 void Malpa::update()

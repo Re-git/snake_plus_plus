@@ -47,8 +47,8 @@ int main(void)
       if (IsKeyDown(KEY_ENTER))
         gameState = inGame;
       // DRAWING
-      BeginDrawing();
       ClearBackground(BROWN);
+      BeginDrawing();
       text_size = MeasureText("PRESS ENTER",30);
       DrawText("PRESS ENTER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
       EndDrawing();
@@ -59,10 +59,9 @@ int main(void)
       monkeyList.clear();
       snake = Snake(15);
       fruit.moveFruit();
-      // KEYBOARD INPUT
-      if (IsKeyDown(KEY_ENTER))
-        gameState = inGame;
       // DRAWING
+      while (gameState == deathScreen)
+      {
         BeginDrawing();
         ClearBackground(WHITE);
         text_size = MeasureText("GAME OVER",30);
@@ -70,6 +69,10 @@ int main(void)
         text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
         DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+30, 20,BLACK);
         EndDrawing();
+      // KEYBOARD INPUT
+        if (IsKeyDown(KEY_ENTER))
+          gameState = inGame;
+      }
     break;
 
     case inGame:
@@ -88,7 +91,7 @@ int main(void)
       {
         m.applyBehaviors(monkeyList, snake.position);
         m.update();
-        if (snake.collide(m.narysowana_malpa)) 
+        if (snake.collide(m.monkeyRec)) 
         {
           gameState = deathScreen;
         }
