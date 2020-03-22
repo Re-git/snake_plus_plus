@@ -6,13 +6,16 @@
 #include "stdlib.h"
 #include <vector>
 
-const int FRUIT_SIZE=25;
+
 
 class Fruits {
 public:
+    Texture2D sprite;  
+    float fruitSize;
     int topMargin;
     int leftMargin;
     int botMargin;
+    float growing;
     Rectangle collisionMask;
     Vector2 position;
     Fruits(int topMargin,int leftMargin, int botMargin);

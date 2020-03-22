@@ -19,6 +19,7 @@ public:
     float maxSpeed;
     float angle;
     float turnRate;
+    float speedModifier;
     std::vector<Vector2> tail;
     Snake(int length);
 
@@ -30,6 +31,7 @@ public:
     void limit(Vector2&, float);
     bool collide(Rectangle rec);
     void turn(float);
+    void limitAngle(float);
 };
 
 #endif

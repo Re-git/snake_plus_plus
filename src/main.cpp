@@ -21,8 +21,8 @@ int main(void){
   const int topMargin=65;
   const int leftMargin=9;
   const int botMargin=4;
-  int screenWidth = 1200;
-  int screenHeight = 800;
+  int screenWidth = 1420;
+  int screenHeight = 1000;
   static int frameCounter, points;
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   gameState = mainMenu;
@@ -76,8 +76,10 @@ int main(void){
         ClearBackground(WHITE);
         text_size = MeasureText("GAME OVER",30);
         DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
+        text_size = MeasureText("YOUR SCORE",30);
+        DrawText("YOUR SCORE:",screenWidth/2 - text_size/2,screenHeight/2+ 30, 30,BLACK);
         text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
-        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+30, 20,BLACK);
+        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+60, 20,BLACK);
         EndDrawing();
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
@@ -101,7 +103,7 @@ int main(void){
           points+=10;
           fruit.moveFruit();
           niezjedzone.reset();
-          for (size_t i = 0; i < 5; i++)
+          for (size_t i = 0; i < 2; i++)
           {
             snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
           }                
@@ -139,7 +141,7 @@ int main(void){
       }
 
 
-    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekund
+    static Timer timer(2000); // tworzymy timer i ustawiamy go na 0.5 sekund
     if (timer.isReady())       // sprawdzamy czy już minęło 0.5 sek
       {
           monkeyList.push_back(Malpa());
