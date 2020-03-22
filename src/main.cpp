@@ -119,9 +119,9 @@ int main(void){
       
       // RAMKA - PRZESTRZEŃ GRY
       // DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
-      DrawRectangle(0,60,screenWidth,screenHeight,PURPLE);
-      DrawRectangle(6,64,screenWidth-12,screenHeight-69,BLACK);
-      DrawRectangle(0,0,screenWidth,60, PURPLE);
+      DrawRectangle(0,60,screenWidth,screenHeight,DARKBROWN);
+      DrawRectangle(6,64,screenWidth-12,screenHeight-69,Color{10,80,40,255});
+      DrawRectangle(0,0,screenWidth,60, DARKBROWN);
       DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
       DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);
 
