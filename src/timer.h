@@ -15,6 +15,7 @@ public:
     bool isReady();
     void reset();
     void setLimit(int);
+    unsigned int getLimit();
     unsigned long getTime();
 };
 
@@ -48,6 +49,10 @@ void Timer::reset()
 void Timer::setLimit(int time_limit)
 {
     timeLimit = time_limit;
+}
+unsigned int Timer::getLimit()
+{
+    return timeLimit;
 }
 
 unsigned long Timer::getTime()

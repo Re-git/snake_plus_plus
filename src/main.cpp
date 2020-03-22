@@ -7,6 +7,7 @@
 #include "libs/raylib.h"
 #include "libs/raymath.h"
 // Import naszych nagłówków
+#include "utility.h"
 #include "monkey.h"
 #include "snake.h"
 #include "timer.h"
@@ -19,7 +20,7 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
-  Rectangle gameArea = {screenWidth/2, screenHeight/2+65, screenWidth-10, screenHeight-75};
+  Area gameArea = {5, 65, 5, 5};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
@@ -71,16 +72,14 @@ int main(void){
       frameCounter = 0;
 
       // DRAWING
-      while (gameState == deathScreen)
-      {
         BeginDrawing();
         ClearBackground(WHITE);
         text_size = MeasureText("GAME OVER",30);                                                                      
-        DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);                                 //krzywe po resize
+        DrawText("GAME OVER",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2, 30,BLACK); 
         text_size = MeasureText("YOUR SCORE",30);
-        DrawText(TextFormat("YOUR SCORE: %d", points),screenWidth/2 - text_size/2,screenHeight/2+ 30, 30,BLACK);    //krzywe po resize
-        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);                                                  //krzywe po resize
-        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+60, 20,BLACK);            //krzywe po resize
+        DrawText(TextFormat("YOUR SCORE: %d", points),GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+ 30, 30,BLACK);
+        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
+        DrawText("PRESS ENTER TO RESTART GAME",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+60, 20,BLACK); 
         EndDrawing();
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
@@ -89,7 +88,7 @@ int main(void){
           czas_punktowy.reset();
           points = 0;
           }
-      }
+
     break;
 
     case inGame:
@@ -145,10 +144,15 @@ int main(void){
       }
 
 
-    static Timer timer(2000); // tworzymy timer i ustawiamy go na 0.5 sekund
+    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekund
     if (timer.isReady())       // sprawdzamy czy już minęło 0.5 sek
       {
           monkeyList.push_back(Malpa(monkeySprite));
+          if (timer.getLimit() > 200)
+          {
+            timer.setLimit(timer.getLimit() - 1);
+          }
+          
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
       

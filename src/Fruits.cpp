@@ -1,7 +1,8 @@
 
 #include "Fruits.h"
 
-Fruits::Fruits(Texture2D fruitSprite, Rectangle gameArea) {
+
+Fruits::Fruits(Texture2D fruitSprite, Area gameArea) {
     sprite = fruitSprite;
     fruitSize = 45;
     spawnArea = gameArea;
@@ -11,8 +12,8 @@ Fruits::Fruits(Texture2D fruitSprite, Rectangle gameArea) {
 
 void Fruits::moveFruit() {
 
-    position.x=((int)std::abs(rand() % ((int)spawnArea.width)+(GetScreenWidth()-spawnArea.width)));
-    position.y=((int)std::abs(rand()% (int)(spawnArea.height - 2*fruitSize)+(GetScreenHeight()-spawnArea.height+(int)fruitSize)));
+    position.x=((int)std::abs(spawnArea.left+(int)fruitSize+ rand() % (GetScreenWidth()-spawnArea.right-2*(int)fruitSize)));
+    position.y=((int)std::abs(spawnArea.top + rand() % (GetScreenHeight()-spawnArea.bottom-2*(int)fruitSize)));
     collisionMask= {position.x-fruitSize/2,position.y-fruitSize/2,fruitSize,fruitSize};
 }
 void Fruits::draw()
