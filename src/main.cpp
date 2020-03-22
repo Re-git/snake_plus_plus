@@ -72,18 +72,20 @@ int main(void){
       {
         BeginDrawing();
         ClearBackground(WHITE);
-        text_size = MeasureText("GAME OVER",30);
-        DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
+        text_size = MeasureText("GAME OVER",30);                                                                      
+        DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);                                 //krzywe po resize
         text_size = MeasureText("YOUR SCORE",30);
-        DrawText("YOUR SCORE:",screenWidth/2 - text_size/2,screenHeight/2+ 30, 30,BLACK);
-        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
-        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+60, 20,BLACK);
+        DrawText(TextFormat("YOUR SCORE: %d", points),screenWidth/2 - text_size/2,screenHeight/2+ 30, 30,BLACK);    //krzywe po resize
+        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);                                                  //krzywe po resize
+        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+60, 20,BLACK);            //krzywe po resize
         EndDrawing();
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
           gameState = inGame;
           niezjedzone.reset();
-          czas_punktowy.reset();}
+          czas_punktowy.reset();
+          points = 0;
+          }
       }
     break;
 
@@ -108,15 +110,17 @@ int main(void){
       }
 
 
-
       // DRAWING
       BeginDrawing();
       ClearBackground(BLACK);
       
       // RAMKA - PRZESTRZEŃ GRY
-      DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
-      DrawText(TextFormat("PUNKTY: %d",points),40,10,35,PURPLE);
-      DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,10,35,PURPLE);
+      // DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
+      DrawRectangle(0,60,screenWidth,screenHeight,PURPLE);
+      DrawRectangle(6,64,screenWidth-12,screenHeight-69,BLACK);
+      DrawRectangle(0,0,screenWidth,60, PURPLE);
+      DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
+      DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);
 
       // 1 punkt za 5 sekund przezycia
 
@@ -134,7 +138,6 @@ int main(void){
         {
           gameState = deathScreen;
           frameCounter = 0;
-          points = 0;
         }
       }
 
