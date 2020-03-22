@@ -21,7 +21,6 @@ Snake::Snake(Texture2D snakeSprite ,int length)
     }
 }
 
-
 void Snake::update()
 {
     tail.insert(tail.begin(), Vector2{position.x, position.y});
@@ -79,7 +78,7 @@ void Snake::handleInput()
       }
       if (IsKeyDown(KEY_UP))
       {
-          speedModifier += 0.1;
+          speedModifier += 0.5;
       }
       if (IsKeyReleased(KEY_UP))
       {

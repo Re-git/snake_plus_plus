@@ -38,6 +38,7 @@ int main(void){
   Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
+  Texture2D groundTile = LoadTexture("C:/Users/Rem/work/Snakepp/assets/sprites/tiles/Ground_Tile_01_C.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
@@ -93,6 +94,7 @@ int main(void){
 
     case inGame:
       frameCounter++;
+      fruit.update();
             // niezjedzone jedzenie znika po 10 s
             if(niezjedzone.isReady())
             {
@@ -118,8 +120,15 @@ int main(void){
       
       // RAMKA - PRZESTRZEŃ GRY
       // DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
-      DrawRectangle(0,60,screenWidth,screenHeight,DARKBROWN);
-      DrawRectangle(6,64,screenWidth-12,screenHeight-69,Color{10,80,40,255});
+      for(int x=0;x<(GetScreenWidth()/128)+1;x++)
+      {
+        for(int y=0;y<(GetScreenHeight()/128)+1;y++)
+        {
+          DrawTexture(groundTile,x*128,y*128,WHITE);
+        }
+      }
+      // DrawRectangle(6,64,screenWidth-12,screenHeight-69,Color{10,80,40,255});
+      // DrawRectangle(0,60,screenWidth,screenHeight,DARKBROWN);
       DrawRectangle(0,0,screenWidth,60, DARKBROWN);
       DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
       DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);

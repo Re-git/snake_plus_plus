@@ -28,6 +28,7 @@ public:
     void limit(Vector2&, float);
     void applyForce(Vector2);
     void applyBehaviors(std::vector<Malpa>, Vector2);
+    void nerwowosc(float);
     Vector2 createPosition();
     Vector2 seek(Vector2);
     Vector2 separate(std::vector<Malpa>);
