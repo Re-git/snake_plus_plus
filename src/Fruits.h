@@ -11,18 +11,16 @@
 class Fruits {
 public:
     Texture2D sprite;  
+    Rectangle spawnArea;
     float fruitSize;
-    int topMargin;
-    int leftMargin;
-    int botMargin;
     float growing;
     Rectangle collisionMask;
     Vector2 position;
-    Fruits(int topMargin,int leftMargin, int botMargin);
+    Fruits(Rectangle gameArea);
     void moveFruit();
     void draw();
     void update();
-
+    void pulse(float, float);
 
 };
 

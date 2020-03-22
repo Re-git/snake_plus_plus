@@ -16,31 +16,29 @@
 enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
 
 int main(void){
+  // INITIALIZE VARIABLES
+  float screenWidth = 1420;
+  float screenHeight = 1000;
+  Rectangle gameArea = {screenWidth/2, screenHeight/2+65, screenWidth-10, screenHeight-75};
+  gameState = mainMenu;
   static Timer niezjedzone(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
-  const int topMargin=65;
-  const int leftMargin=9;
-  const int botMargin=4;
-  int screenWidth = 1420;
-  int screenHeight = 1000;
   static int frameCounter, points;
-  SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
-  gameState = mainMenu;
   int text_size;
-  SetTargetFPS(60);
   // CREATE WINDOW
-  InitWindow(screenWidth, screenHeight, "Snake");
+  SetTargetFPS(60);
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
+  InitWindow((int)screenWidth, (int)screenHeight, "Snake");
   Vector2 windowPosition = {100, 100};
   SetWindowPosition(windowPosition.x, windowPosition.y);
   // START RANDOM NUMBER GENERATOR
   srand(time(NULL));
 
-  // INITIALIZE VARIABLES
-  std::vector<Malpa> monkeyList;
   Snake snake(15);
-  Fruits fruit(topMargin,leftMargin,botMargin);
+  std::vector<Malpa> monkeyList;
+  Fruits fruit(gameArea);
 
-    std::cout<<"wysokosc "<<GetScreenHeight()<<"szerokosc "<<GetScreenWidth();
+
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
   {
