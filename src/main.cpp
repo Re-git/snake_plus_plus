@@ -55,6 +55,7 @@ int main(void){
         gameState = inGame;
         niezjedzone.reset();
         czas_punktowy.reset();}
+      
       // DRAWING
       ClearBackground(BROWN);
       BeginDrawing();
@@ -76,18 +77,24 @@ int main(void){
         BeginDrawing();
         ClearBackground(WHITE);
         text_size = MeasureText("GAME OVER",30);                                                                      
-        DrawText("GAME OVER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);                                 //krzywe po resize
+        DrawText("GAME OVER",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2, 30,BLACK);
         text_size = MeasureText("YOUR SCORE",30);
-        DrawText(TextFormat("YOUR SCORE: %d", points),screenWidth/2 - text_size/2,screenHeight/2+ 30, 30,BLACK);    //krzywe po resize
-        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);                                                  //krzywe po resize
-        DrawText("PRESS ENTER TO RESTART GAME",screenWidth/2 - text_size/2,screenHeight/2+60, 20,BLACK);            //krzywe po resize
+        DrawText(TextFormat("YOUR SCORE: %d", points),GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+ 30, 30,BLACK);
+        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
+        DrawText("PRESS ENTER TO RESTART GAME",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+60, 20,BLACK); 
         EndDrawing();
+        
+
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
           gameState = inGame;
           niezjedzone.reset();
           czas_punktowy.reset();
           points = 0;
+          }
+        if(IsKeyDown(KEY_ESCAPE))
+          {
+            goto sprzataczka;
           }
       }
     break;
@@ -168,6 +175,7 @@ int main(void){
 
   }
   // CLEANUP
+  sprzataczka:
   CloseWindow();
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
