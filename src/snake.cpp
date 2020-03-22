@@ -1,9 +1,9 @@
 #include "snake.h"
 
 
-Snake::Snake(int length)
+Snake::Snake(Texture2D snakeSprite ,int length)
 {
-    sprite = LoadTexture("assets/sprites/snake.png");  
+    sprite = snakeSprite;  
     headHeight = 30;
     headWidth = 30; 
     bodyHeight = 10;

@@ -1,9 +1,9 @@
 #include "monkey.h"
 #include <iostream>
 
-Malpa::Malpa()
+Malpa::Malpa(Texture2D monkeySprite)
 {
-    sprite = LoadTexture("assets/sprites/monkey.png");
+    sprite = monkeySprite;
     position = createPosition();                //trzeba lepiej dostosowac do ramki
     velocity = Vector2{0,0};
     acceleration = Vector2{0,0};

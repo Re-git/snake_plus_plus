@@ -22,7 +22,7 @@ public:
     Rectangle monkeyRec;
     Texture2D sprite;
 
-    Malpa();
+    Malpa(Texture2D monkeySprite);
     void draw();
     void update();
     void limit(Vector2&, float);

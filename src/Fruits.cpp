@@ -1,7 +1,8 @@
 
 #include "Fruits.h"
-Fruits::Fruits(Rectangle gameArea) {
-    sprite = LoadTexture("assets/sprites/owocek.png");
+
+Fruits::Fruits(Texture2D fruitSprite, Rectangle gameArea) {
+    sprite = fruitSprite;
     fruitSize = 45;
     spawnArea = gameArea;
     growing = 0.5;

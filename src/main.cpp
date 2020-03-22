@@ -33,11 +33,14 @@ int main(void){
   SetWindowPosition(windowPosition.x, windowPosition.y);
   // START RANDOM NUMBER GENERATOR
   srand(time(NULL));
-
-  Snake snake(15);
+  // LOAD TEXTURES
+  Texture2D fruitSprite = LoadTexture("assets/sprites/owocek.png");
+  Texture2D monkeySprite = LoadTexture("assets/sprites/monkey.png");
+  Texture2D snakeSprite = LoadTexture("assets/sprites/snake.png");
+  // CREATE GAME OBJECTS
+  Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
-  Fruits fruit(gameArea);
-
+  Fruits fruit(fruitSprite, gameArea);
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
@@ -63,7 +66,7 @@ int main(void){
     case deathScreen:
       // CLEANUP
       monkeyList.clear();
-      snake = Snake(15);
+      snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
       frameCounter = 0;
 
@@ -145,7 +148,7 @@ int main(void){
     static Timer timer(2000); // tworzymy timer i ustawiamy go na 0.5 sekund
     if (timer.isReady())       // sprawdzamy czy już minęło 0.5 sek
       {
-          monkeyList.push_back(Malpa());
+          monkeyList.push_back(Malpa(monkeySprite));
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
       

@@ -21,7 +21,7 @@ public:
     float turnRate;
     float speedModifier;
     std::vector<Vector2> tail;
-    Snake(int length);
+    Snake(Texture2D snakeSprite ,int length);
 
     void update();
     void draw();
