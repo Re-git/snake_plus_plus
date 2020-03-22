@@ -87,13 +87,11 @@ int main(void){
           niezjedzone.reset();
           czas_punktowy.reset();
           points = 0;
-          goto inGame;
           }
       }
     break;
 
     case inGame:
-      inGame:
       frameCounter++;
             // niezjedzone jedzenie znika po 10 s
             if(niezjedzone.isReady())
