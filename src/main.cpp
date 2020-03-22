@@ -169,6 +169,9 @@ int main(void){
   }
   // CLEANUP
   CloseWindow();
+  UnloadTexture(snakeSprite);
+  UnloadTexture(monkeySprite);
+  UnloadTexture(fruitSprite);
   return 0;
 }
 
