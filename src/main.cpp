@@ -34,9 +34,9 @@ int main(void){
   // START RANDOM NUMBER GENERATOR
   srand(time(NULL));
   // LOAD TEXTURES
-  Texture2D fruitSprite = LoadTexture("assets/sprites/owocek.png");
-  Texture2D monkeySprite = LoadTexture("assets/sprites/monkey.png");
-  Texture2D snakeSprite = LoadTexture("assets/sprites/snake.png");
+  Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
+  Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
+  Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
