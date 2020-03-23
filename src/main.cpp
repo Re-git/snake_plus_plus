@@ -12,6 +12,7 @@
 #include "snake.h"
 #include "timer.h"
 #include "Fruits.h"
+#include "Nukes.h"
 
 
 enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
@@ -23,6 +24,7 @@ int main(void){
   Area gameArea = {5, 65, 5, 5};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
+  static Timer nieuzyte(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
   static int frameCounter, points;
   int text_size;
@@ -38,11 +40,13 @@ int main(void){
   Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
-  Texture2D groundTile = LoadTexture("C:/Users/Rem/work/Snakepp/assets/sprites/tiles/Ground_Tile_01_C.png");
+  Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_C.png");
+  Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
   Fruits fruit(fruitSprite, gameArea);
+  Nukes nuke(nukeSprite, gameArea);
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
@@ -70,6 +74,7 @@ int main(void){
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
+      nuke.moveNuke();
       frameCounter = 0;
 
       // DRAWING
@@ -95,23 +100,34 @@ int main(void){
     case inGame:
       frameCounter++;
       fruit.update();
+      nuke.update();
             // niezjedzone jedzenie znika po 10 s
             if(niezjedzone.isReady())
             {
                 fruit.moveFruit();
                 niezjedzone.reset();
             }
+            if (nieuzyte.isReady()){
+                nuke.moveNuke();
+                nieuzyte.reset();
+            }
 
             if(snake.collide(fruit.collisionMask))
-      {
-          points+=10;
-          fruit.moveFruit();
-          niezjedzone.reset();
-          for (size_t i = 0; i < 2; i++)
-          {
-            snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
-          }                
-      }
+                {
+                  points+=10;
+                  fruit.moveFruit();
+                  niezjedzone.reset();
+
+         
+                  for (size_t i = 0; i < 2; i++)
+                  {
+                    snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
+                  }                
+                }
+            if (snake.collide(nuke.collisionMask)){
+                nuke.moveNuke();
+                nieuzyte.reset();
+            }
 
 
       // DRAWING
@@ -171,6 +187,7 @@ int main(void){
       snake.update();
       snake.draw();
       fruit.draw();
+      nuke.draw();
       EndDrawing();
     break;
     
@@ -185,6 +202,7 @@ int main(void){
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
+  UnloadTexture(nukeSprite);
   return 0;
 }
 
