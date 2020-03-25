@@ -38,7 +38,7 @@ int main(void){
   Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
-  Texture2D groundTile = LoadTexture("C:/Users/Rem/work/Snakepp/assets/sprites/tiles/Ground_Tile_01_C.png");
+  Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_C.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
