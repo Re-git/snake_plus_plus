@@ -58,10 +58,10 @@ bool Snake::checkCollisionWithEdges(Vector2 &pos)
     int width = GetScreenWidth();
     int height = GetScreenHeight();
     bool collide = false;
-    if (pos.x > width-4)  {pos.x = width-4;  if(angle>PI) angle=angle-PI-2*angle; else angle=PI-angle;  collide=true;}
-    if (pos.x < 3)        {pos.x = 3;        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true;}
-    if (pos.y > height-6) {pos.y = height-6;  if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true;}
-    if (pos.y < 64)        {pos.y = 65;        if(angle>1.5*PI) angle=angle-PI-(2*(angle-1.5*PI)); else angle=angle-PI+(2*(1.5*PI-angle));  collide=true;}
+    if (pos.x > width-40)  {pos.x = width-40;  if(angle>PI) angle=angle-PI-2*angle; else angle=PI-angle;  collide=true;}
+    if (pos.x < 41)        {pos.x = 42;        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true;}
+    if (pos.y > height-55) {pos.y = height-55;  if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true;}
+    if (pos.y < 116)        {pos.y = 116;        if(angle>1.5*PI) angle=angle-PI-(2*(angle-1.5*PI)); else angle=angle-PI+(2*(1.5*PI-angle));  collide=true;}
     return collide;
 }
 

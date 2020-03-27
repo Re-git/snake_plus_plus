@@ -20,7 +20,7 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
-  Area gameArea = {5, 65, 5, 5};
+  Area gameArea = {40, 80, 40, 80};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
@@ -38,7 +38,10 @@ int main(void){
   Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
-  Texture2D groundTile = LoadTexture("C:/Users/Rem/work/Snakepp/assets/sprites/tiles/Ground_Tile_01_C.png");
+  Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
+  Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
+  Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
+  Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
@@ -113,29 +116,45 @@ int main(void){
           }                
       }
 
-
       // DRAWING
       BeginDrawing();
       ClearBackground(BLACK);
       
       // RAMKA - PRZESTRZEŃ GRY
-      // DrawRectangleLines(4,60,screenWidth-8,screenHeight-64,ORANGE);
+      //RYSOWANIE PODŁOGI
       for(int x=0;x<(GetScreenWidth()/128)+1;x++)
       {
         for(int y=0;y<(GetScreenHeight()/128)+1;y++)
         {
-          DrawTexture(groundTile,x*128,y*128,WHITE);
+          DrawTexture(groundTile,x*128,y*128,WHITE);  
+                  
         }
       }
-      // DrawRectangle(6,64,screenWidth-12,screenHeight-69,Color{10,80,40,255});
-      // DrawRectangle(0,60,screenWidth,screenHeight,DARKBROWN);
-      DrawRectangle(0,0,screenWidth,60, DARKBROWN);
+
+      //GÓRNA CZĘŚĆ GUI
+      DrawRectangle(0,0,screenWidth,60, Color{8,8,8,133});
       DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
       DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);
 
-      // 1 punkt za 5 sekund przezycia
+      //RYSOWANIE RAMECZKI - BUSH
+      for(int x = 0; x<(GetScreenWidth()+1); x=x+127)
+      {
+        DrawTexture(fenceSprite_side,x,58,WHITE);
+        DrawTexture(fenceSprite_side_rotated,x,GetScreenHeight()-50,WHITE);
+        
+      }
 
-      if(czas_punktowy.isReady())
+      for(int y = 60; y<(GetScreenHeight()-44); y=y+70)
+      {
+        DrawTexture(fenceSprite,0,y,WHITE);
+        DrawTexture(fenceSprite,GetScreenWidth()-40,y,WHITE);
+      }
+
+
+
+
+
+      if(czas_punktowy.isReady())   // 1 punkt za 5 sekund przezycia
       {
       points++;
       czas_punktowy.reset(); 
@@ -153,8 +172,8 @@ int main(void){
       }
 
 
-    static Timer timer(5000); // tworzymy timer i ustawiamy go na 0.5 sekund
-    if (timer.isReady())       // sprawdzamy czy już minęło 0.5 sek
+    static Timer timer(5000); // tworzymy timer i ustawiamy go na 5 sekund
+    if (timer.isReady())       // sprawdzamy czy już minęło 5 sek
       {
           monkeyList.push_back(Malpa(monkeySprite));
           if (timer.getLimit() > 200)
@@ -164,8 +183,6 @@ int main(void){
           
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
-      
-
 
       snake.handleInput();
       snake.update();
@@ -185,6 +202,10 @@ int main(void){
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
+  UnloadTexture(groundTile);
+  UnloadTexture(fenceSprite);
+  UnloadTexture(fenceSprite_side);
+  UnloadTexture(fenceSprite_side_rotated);
   return 0;
 }
 
