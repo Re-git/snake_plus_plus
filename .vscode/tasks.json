@@ -11,7 +11,7 @@
         {
             "label": "compile on MacOS",
             "type": "shell",
-            "command": "g++ src/main.cpp src/monkey.cpp src/snake.cpp -std=c++17 `pkg-config --libs --cflags raylib` && ./a.out && rm ./a.out",
+            "command": "g++ src/main.cpp src/monkey.cpp src/snake.cpp src/Fruits.cpp -std=c++17 `pkg-config --libs --cflags raylib` && ./a.out && rm ./a.out",
             "problemMatcher": []
         }
     ]

@@ -26,7 +26,8 @@ int main(void){
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
   static int frameCounter, points;
   int text_size;
-  // CREATE WINDOW
+  InitAudioDevice();
+    // CREATE WINDOW
   SetTargetFPS(60);
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow((int)screenWidth, (int)screenHeight, "Snake");
@@ -42,6 +43,11 @@ int main(void){
   Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
   Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
   Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
+  Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_C.png");
+  Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
+  Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
+  Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
+  SetMusicVolume(IGS, 0.2);
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
@@ -70,6 +76,7 @@ int main(void){
 
     case deathScreen:
       // CLEANUP
+      StopMusicStream(IGS);
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
@@ -96,6 +103,13 @@ int main(void){
     break;
 
     case inGame:
+
+      UpdateMusicStream(IGS);
+      if(IsMusicPlaying(IGS)== false)
+      {
+          UpdateMusicStream(IGS);
+          PlayMusicStream(IGS);
+      }
       frameCounter++;
       fruit.update();
             // niezjedzone jedzenie znika po 10 s
@@ -113,13 +127,13 @@ int main(void){
           for (size_t i = 0; i < 2; i++)
           {
             snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
-          }                
+          }
       }
 
       // DRAWING
       BeginDrawing();
       ClearBackground(BLACK);
-      
+
       // RAMKA - PRZESTRZEŃ GRY
       //RYSOWANIE PODŁOGI
       for(int x=0;x<(GetScreenWidth()/128)+1;x++)
@@ -159,7 +173,8 @@ int main(void){
       points++;
       czas_punktowy.reset(); 
       }
-      
+      if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySound(BCS);
+
       for (Malpa &m : monkeyList)  // for every monkey in monkey list
       {
         m.applyBehaviors(monkeyList, snake.position);
@@ -167,6 +182,7 @@ int main(void){
         if (snake.collide(m.monkeyRec)) 
         {
           gameState = deathScreen;
+          PlaySound(GameOver);
           frameCounter = 0;
         }
       }
@@ -184,6 +200,7 @@ int main(void){
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
 
+
       snake.handleInput();
       snake.update();
       snake.draw();
@@ -198,7 +215,6 @@ int main(void){
 
   }
   // CLEANUP
-  CloseWindow();
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
@@ -206,6 +222,12 @@ int main(void){
   UnloadTexture(fenceSprite);
   UnloadTexture(fenceSprite_side);
   UnloadTexture(fenceSprite_side_rotated);
+  StopSoundMulti();
+  UnloadSound(BCS);
+  UnloadSound(GameOver);
+  UnloadMusicStream(IGS);
+  CloseAudioDevice();
+  CloseWindow();
   return 0;
 }
 

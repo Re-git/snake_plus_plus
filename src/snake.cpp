@@ -26,7 +26,7 @@ void Snake::update()
     tail.insert(tail.begin(), Vector2{position.x, position.y});
     tail.pop_back();
     move();
-    checkCollisionWithEdges(position);
+    checkCollisionWithEdges(position, collisionSound);
     limitAngle(2*PI);
     limit(velocity, maxSpeed);
 }
@@ -53,15 +53,16 @@ void Snake::move()
     position = Vector2Add(velocity,position);
 }
 
-bool Snake::checkCollisionWithEdges(Vector2 &pos)
+bool Snake::checkCollisionWithEdges(Vector2 &pos,Sound BCS)
 {
+    collisionSound = BCS;
     int width = GetScreenWidth();
     int height = GetScreenHeight();
     bool collide = false;
-    if (pos.x > width-40)  {pos.x = width-40;  if(angle>PI) angle=angle-PI-2*angle; else angle=PI-angle;  collide=true;}
-    if (pos.x < 41)        {pos.x = 42;        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true;}
-    if (pos.y > height-55) {pos.y = height-55;  if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true;}
-    if (pos.y < 116)        {pos.y = 116;        if(angle>1.5*PI) angle=angle-PI-(2*(angle-1.5*PI)); else angle=angle-PI+(2*(1.5*PI-angle));  collide=true;}
+    if (pos.x > width-40)  {{pos.x = width-40; PlaySound(BCS);} if(angle>PI) angle=angle-PI-2*angle; else angle=PI-angle;  collide=true;}
+    if (pos.x < 41)        {{pos.x = 42; PlaySound(BCS);}        if(angle>PI) angle=2*PI-(angle-PI); else angle=PI-angle;  collide=true; }
+    if (pos.y > height-55) {{pos.y = height-55; PlaySound(BCS);} if(angle>PI/2) angle=2*PI-angle; else angle=2*PI-angle;  collide=true; }
+    if (pos.y < 116)        {{pos.y = 116; PlaySound(BCS);}       if(angle>1.5*PI) angle=angle-PI-(2*(angle-1.5*PI)); else angle=angle-PI+(2*(1.5*PI-angle));  collide=true;}
     return collide;
 }
 
