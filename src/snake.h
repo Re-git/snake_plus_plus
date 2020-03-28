@@ -9,6 +9,7 @@
 class Snake
 {
 public:
+    Sound collisionSound;
     Texture2D sprite;
     float headHeight;
     float headWidth;
@@ -27,7 +28,7 @@ public:
     void draw();
     void move();
     void handleInput();
-    bool checkCollisionWithEdges(Vector2&);
+    bool checkCollisionWithEdges(Vector2&,Sound BCS);
     void limit(Vector2&, float);
     bool collide(Rectangle rec);
     void turn(float);
