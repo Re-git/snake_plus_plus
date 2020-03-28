@@ -172,7 +172,7 @@ int main(void){
       points++;
       czas_punktowy.reset(); 
       }
-      if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySound(BCS);
+      if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySoundMulti(BCS);
 
       for (Malpa &m : monkeyList)  // for every monkey in monkey list
       {
@@ -214,6 +214,7 @@ int main(void){
 
   }
   // CLEANUP
+  StopSoundMulti();
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
