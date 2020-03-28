@@ -43,7 +43,6 @@ int main(void){
   Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
   Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
   Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
-  Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_C.png");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
   Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
