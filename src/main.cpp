@@ -21,6 +21,7 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
+  int explosionState = 0;
   Area gameArea = {5, 65, 5, 5};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
@@ -49,6 +50,7 @@ int main(void){
   Fruits fruit(fruitSprite, gameArea);
   Nukes nuke(nukeSprite, gameArea);
   Explosion explosion(explosionSprite, gameArea);
+ 
  
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
@@ -128,6 +130,8 @@ int main(void){
                   }                
                 }
             if (snake.collide(nuke.collisionMask)){
+                explosionState = 1;
+                explosion.moveExplosion(snake.position.x, snake.position.y);
                 points = points + monkeyList.size();
                 monkeyList.clear();
                 nuke.moveNuke();
@@ -193,6 +197,8 @@ int main(void){
       snake.draw();
       fruit.draw();
       nuke.draw();
+      if(explosionState==1)
+          explosion.draw();
       EndDrawing();
     break;
     
