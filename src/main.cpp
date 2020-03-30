@@ -13,7 +13,7 @@
 #include "timer.h"
 #include "Fruits.h"
 #include "Nukes.h"
-
+#include "Explosion.h"
 
 enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
 
@@ -42,11 +42,14 @@ int main(void){
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
   Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_C.png");
   Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
+  Texture2D explosionSprite = LoadTexture("assets/sprites/effects/explosion3.png");
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
   Fruits fruit(fruitSprite, gameArea);
   Nukes nuke(nukeSprite, gameArea);
+  Explosion explosion(explosionSprite, gameArea);
+ 
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
@@ -125,6 +128,8 @@ int main(void){
                   }                
                 }
             if (snake.collide(nuke.collisionMask)){
+                points = points + monkeyList.size();
+                monkeyList.clear();
                 nuke.moveNuke();
                 nieuzyte.reset();
             }
@@ -203,6 +208,7 @@ int main(void){
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
   UnloadTexture(nukeSprite);
+  UnloadTexture(explosionSprite);
   return 0;
 }
 
