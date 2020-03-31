@@ -25,13 +25,13 @@ Timer::Timer(int time_limit)
     timeCounter = 0;           
     prevTime = clock();
     currentTime = clock() - prevTime;
-    timeCounter = currentTime*1000/CLOCKS_PER_SEC;
+    timeCounter = currentTime/100;
 }
 
 bool Timer::isReady()
 {
     currentTime = clock() - prevTime;
-    timeCounter = currentTime*1000/CLOCKS_PER_SEC;
+    timeCounter = currentTime/100;
     if (timeCounter >= timeLimit)
     {
         return true;
@@ -43,7 +43,7 @@ void Timer::reset()
 {
     prevTime = clock();
     currentTime = clock() - prevTime;
-    timeCounter = currentTime*1000/CLOCKS_PER_SEC;
+    timeCounter = currentTime/100;
 }
 
 void Timer::setLimit(int time_limit)
