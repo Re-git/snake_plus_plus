@@ -156,12 +156,8 @@ int main(void){
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
-<<<<<<< Updated upstream
       nuke.moveNuke();
-      frameCounter = 0;
-=======
-      
->>>>>>> Stashed changes
+
 
       // DRAWING
         BeginDrawing();
