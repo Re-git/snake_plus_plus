@@ -28,7 +28,7 @@ int main(void){
   static Timer nieuzyte(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
   static int frameCounter, points;
-  int text_size;
+  // int text_size;
   InitAudioDevice();
     // CREATE WINDOW
   SetTargetFPS(60);
@@ -36,6 +36,9 @@ int main(void){
   InitWindow((int)screenWidth, (int)screenHeight, "Snake");
   Vector2 windowPosition = {100, 100};
   SetWindowPosition(windowPosition.x, windowPosition.y);
+  Image ikona = LoadImage("assets/sprites/gui/ikona3.png");
+  SetWindowIcon(ikona);
+  
   // START RANDOM NUMBER GENERATOR
   srand(time(NULL));
   // LOAD TEXTURES
@@ -48,9 +51,29 @@ int main(void){
   Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
   Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
   Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
+  Texture2D startButton = LoadTexture("assets/sprites/gui/start4.png");
+  Texture2D quitButton = LoadTexture("assets/sprites/gui/quit3.png");
+  Texture2D replayButton = LoadTexture("assets/sprites/gui/replay_small.png");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
   Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
+  Sound klikniecie = LoadSound("assets/sounds/toggle_001.ogg");
+  Rectangle sourceRec_start = {0.0f,0.0f,static_cast<float>(startButton.width),static_cast<float>(startButton.height)};
+  Rectangle btnBounds_start = {static_cast<float>(GetScreenWidth()/2)-static_cast<float>(startButton.width/2),static_cast<float>(GetScreenHeight()/2)-static_cast<float>(startButton.height/2),static_cast<float>(startButton.width),static_cast<float>(startButton.height)};
+  Rectangle sourceRec_quit = {0.0f,0.0f,static_cast<float>(quitButton.width),static_cast<float>(quitButton.height)};
+  Rectangle btnBounds_quit = {static_cast<float>(GetScreenWidth()/2)-static_cast<float>(quitButton.width/2),static_cast<float>(GetScreenHeight()/2)-static_cast<float>(quitButton.height/2),static_cast<float>(quitButton.width),static_cast<float>(quitButton.height)};
+  Rectangle sourceRec_replay = {0.0f,0.0f,static_cast<float>(replayButton.width),static_cast<float>(replayButton.height)};
+  Rectangle btnBounds_replay = {static_cast<float>(GetScreenWidth()/2)-static_cast<float>(replayButton.width/2),static_cast<float>(GetScreenHeight()/2)-static_cast<float>(replayButton.height/2),static_cast<float>(replayButton.width),static_cast<float>(replayButton.height)};
+  Texture2D scorebox = LoadTexture("assets/sprites/gui/scorebox.png");
+  Vector2 mousePoint = {0.0f,0.0f};
+  Texture2D kursor = LoadTexture("assets/sprites/gui/cursor.png");
+  Texture2D menuLogo = LoadTexture("assets/sprites/gui/logo3_small.png");
+  Texture2D backButton = LoadTexture("assets/sprites/gui/menu3.png");
+  Image menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
+  Texture2D menuBG = LoadTextureFromImage(menuBackground);
+  Rectangle sourceRec_back = {0.0f,0.0f,static_cast<float>(backButton.width),static_cast<float>(backButton.height)};
+  Rectangle btnBounds_back = {static_cast<float>(GetScreenWidth()/2)-static_cast<float>(backButton.width/2),static_cast<float>(GetScreenHeight()/2)-static_cast<float>(backButton.height/2),static_cast<float>(backButton.width),static_cast<float>(backButton.height)};
+
   SetMusicVolume(IGS, 0.2);
 
   // CREATE GAME OBJECTS
@@ -70,16 +93,60 @@ int main(void){
     switch (gameState)
     {
     case mainMenu:
+    HideCursor();
+
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER)){
         gameState = inGame;
         niezjedzone.reset();
         czas_punktowy.reset();}
-      // DRAWING
-      ClearBackground(BROWN);
+      // DRAWING  
       BeginDrawing();
-      text_size = MeasureText("PRESS ENTER",30);
-      DrawText("PRESS ENTER",screenWidth/2 - text_size/2,screenHeight/2, 30,BLACK);
+      ClearBackground(GREEN);
+
+      if(IsWindowResized()) 
+      {
+        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
+        menuBG = LoadTextureFromImage(menuBackground);
+      }
+
+      if(CheckCollisionPointRec(mousePoint,Rectangle{0.0f,0.0f,static_cast<float>(GetScreenWidth()),static_cast<float>(GetScreenHeight())}))
+      {
+        if(IsKeyPressed(KEY_LEFT_SHIFT))
+        {
+        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(), GetRandomValue(0,100), GetRandomValue(0,100), Color{static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),150},Color{static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,100)),150});
+        menuBG = LoadTextureFromImage(menuBackground);
+        }
+      }
+      mousePoint = GetMousePosition();
+      DrawTexture(menuBG,0,0,WHITE);
+      DrawTexture(menuLogo,GetScreenWidth()/2.0-menuLogo.width/2,GetScreenHeight()/2.0-menuLogo.height-100,WHITE);
+      btnBounds_start.x = static_cast<float>(GetScreenWidth()/2-startButton.width/2);
+      btnBounds_start.y = static_cast<float>(GetScreenHeight()/2-startButton.height/2);
+      btnBounds_quit.x = static_cast<float>(GetScreenWidth()/2-quitButton.width/2);
+      btnBounds_quit.y = static_cast<float>(GetScreenHeight()/2-quitButton.height/2)+125;
+      DrawTextureRec(startButton,sourceRec_start,Vector2{btnBounds_start.x,btnBounds_start.y},WHITE);
+      DrawTextureRec(quitButton,sourceRec_quit,Vector2{btnBounds_quit.x,btnBounds_quit.y},WHITE);
+      DrawTexture(kursor,mousePoint.x,mousePoint.y,WHITE);
+    
+      if(CheckCollisionPointRec(mousePoint,btnBounds_start))
+      {
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+        {
+          PlaySound(klikniecie);
+        gameState = inGame; 
+        }
+      }
+
+      if(CheckCollisionPointRec(mousePoint,btnBounds_quit))
+      {
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+        {
+          PlaySound(klikniecie);
+          goto sprzataczka;
+        }
+      }
+
       EndDrawing();
     break;
 
@@ -89,18 +156,61 @@ int main(void){
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
+<<<<<<< Updated upstream
       nuke.moveNuke();
       frameCounter = 0;
+=======
+      
+>>>>>>> Stashed changes
 
       // DRAWING
         BeginDrawing();
-        ClearBackground(WHITE);
-        text_size = MeasureText("GAME OVER",30);                                                                      
-        DrawText("GAME OVER",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2, 30,BLACK); 
-        text_size = MeasureText("YOUR SCORE",30);
-        DrawText(TextFormat("YOUR SCORE: %d", points),GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+ 30, 30,BLACK);
-        text_size = MeasureText("PRESS ENTER TO RESTART GAME",20);
-        DrawText("PRESS ENTER TO RESTART GAME",GetScreenWidth()/2 - text_size/2,GetScreenHeight()/2+60, 20,BLACK); 
+        ClearBackground(GREEN);
+        btnBounds_replay.x = static_cast<float>(GetScreenWidth()/2-replayButton.width/2)-replayButton.width/2;
+        btnBounds_replay.y = static_cast<float>(GetScreenHeight()/2-replayButton.height/2)+210;
+        btnBounds_back.x = static_cast<float>(GetScreenWidth()/2-backButton.width/2)+150;
+        btnBounds_back.y = static_cast<float>(GetScreenHeight()/2-backButton.height/2)+210;
+        DrawTexture(menuBG,0,0,WHITE);
+        DrawTexture(scorebox,(GetScreenWidth()/2)-scorebox.width/2,(GetScreenHeight()/2)-50-scorebox.height/2,WHITE);
+        DrawTextureRec(replayButton,sourceRec_replay,Vector2{btnBounds_replay.x,btnBounds_replay.y},WHITE);
+        DrawTextureRec(backButton,sourceRec_back,Vector2{btnBounds_back.x,btnBounds_back.y},WHITE);
+
+        if(CheckCollisionPointRec(mousePoint,btnBounds_replay))
+      {
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+        {
+          niezjedzone.reset();
+          czas_punktowy.reset();
+          points = 0;
+          frameCounter = 0;
+          PlaySound(klikniecie);
+          gameState = inGame; 
+        }
+      }
+  
+        if(CheckCollisionPointRec(mousePoint,btnBounds_back))
+      {
+        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+        {
+          niezjedzone.reset();
+          czas_punktowy.reset();
+          points = 0;
+          frameCounter = 0;
+          PlaySound(klikniecie);
+          gameState = mainMenu;
+        }
+      }
+
+        if(IsWindowResized()) 
+      {
+        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
+        menuBG = LoadTextureFromImage(menuBackground);
+      }
+
+        DrawText(TextFormat("YOUR SCORE: %d", points),85+GetScreenWidth()/2 -scorebox.width/2,170+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
+        DrawText(TextFormat("TIME SURVIVED: %ds", frameCounter/60),30+(GetScreenWidth()/2)-scorebox.width/2,120+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
+        mousePoint = GetMousePosition();
+        DrawTexture(kursor,mousePoint.x,mousePoint.y,WHITE);
         EndDrawing();
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
@@ -108,6 +218,7 @@ int main(void){
           niezjedzone.reset();
           czas_punktowy.reset();
           points = 0;
+          frameCounter = 0;
           }
 
     break;
@@ -115,7 +226,7 @@ int main(void){
     case inGame:
 
       UpdateMusicStream(IGS);
-      if(IsMusicPlaying(IGS)== false)
+      if(!(IsMusicPlaying(IGS)))
       {
           UpdateMusicStream(IGS);
           PlayMusicStream(IGS);
@@ -192,9 +303,6 @@ int main(void){
       }
 
 
-
-
-
       if(czas_punktowy.isReady())   // 1 punkt za 5 sekund przezycia
       {
       points++;
@@ -210,7 +318,6 @@ int main(void){
         {
           gameState = deathScreen;
           PlaySound(GameOver);
-          frameCounter = 0;
         }
       }
 
@@ -245,7 +352,7 @@ int main(void){
 
   }
   // CLEANUP
-  StopSoundMulti();
+  sprzataczka:
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
@@ -255,9 +362,19 @@ int main(void){
   UnloadTexture(fenceSprite);
   UnloadTexture(fenceSprite_side);
   UnloadTexture(fenceSprite_side_rotated);
+  UnloadTexture(startButton);
+  UnloadTexture(quitButton);
+  UnloadTexture(menuLogo);
+  UnloadTexture(menuBG);
+  UnloadTexture(kursor);
+  UnloadTexture(replayButton);
+  UnloadTexture(backButton);
+  UnloadImage(menuBackground);
+  UnloadImage(ikona);
   StopSoundMulti();
   UnloadSound(BCS);
   UnloadSound(GameOver);
+  UnloadSound(klikniecie);
   UnloadMusicStream(IGS);
   CloseAudioDevice();
   CloseWindow();
