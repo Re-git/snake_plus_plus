@@ -12,7 +12,8 @@
 #include "snake.h"
 #include "timer.h"
 #include "Fruits.h"
-
+#include "Nukes.h"
+#include "Explosion.h"
 
 enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
 
@@ -20,9 +21,11 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
+  int explosionState = 0;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
+  static Timer nieuzyte(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
   static int frameCounter, points;
   int text_size;
@@ -39,6 +42,8 @@ int main(void){
   Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
+  Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
+  Texture2D explosionSprite = LoadTexture("assets/sprites/effects/explosion3.png");
   Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
   Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
   Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
@@ -47,10 +52,15 @@ int main(void){
   Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
   Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
   SetMusicVolume(IGS, 0.2);
+
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
   Fruits fruit(fruitSprite, gameArea);
+  Nukes nuke(nukeSprite, gameArea);
+  Explosion explosion(explosionSprite, gameArea);
+ 
+ 
 
   // To jest główna pętla, wykonywana dopóki okno nie zostanie zamknięte
   while (!WindowShouldClose())
@@ -79,6 +89,7 @@ int main(void){
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
+      nuke.moveNuke();
       frameCounter = 0;
 
       // DRAWING
@@ -111,23 +122,40 @@ int main(void){
       }
       frameCounter++;
       fruit.update();
+      nuke.update();
             // niezjedzone jedzenie znika po 10 s
             if(niezjedzone.isReady())
             {
                 fruit.moveFruit();
                 niezjedzone.reset();
             }
+            if (nieuzyte.isReady()){
+                nuke.moveNuke();
+                nieuzyte.reset();
+            }
 
             if(snake.collide(fruit.collisionMask))
-      {
-          points+=10;
-          fruit.moveFruit();
-          niezjedzone.reset();
-          for (size_t i = 0; i < 2; i++)
-          {
-            snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
-          }
-      }
+
+                {
+                  points+=10;
+                  fruit.moveFruit();
+                  niezjedzone.reset();
+
+         
+                  for (size_t i = 0; i < 2; i++)
+                  {
+                    snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
+                  }                
+                }
+            if (snake.collide(nuke.collisionMask)){
+                explosionState = 1;
+                explosion.moveExplosion(snake.position.x, snake.position.y);
+                points = points + monkeyList.size();
+                monkeyList.clear();
+                nuke.moveNuke();
+                nieuzyte.reset();
+            }
+
 
       // DRAWING
       BeginDrawing();
@@ -204,6 +232,9 @@ int main(void){
       snake.update();
       snake.draw();
       fruit.draw();
+      nuke.draw();
+      if(explosionState==1)
+          explosion.draw();
       EndDrawing();
     break;
     
@@ -218,6 +249,8 @@ int main(void){
   UnloadTexture(snakeSprite);
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
+  UnloadTexture(nukeSprite);
+  UnloadTexture(explosionSprite);
   UnloadTexture(groundTile);
   UnloadTexture(fenceSprite);
   UnloadTexture(fenceSprite_side);
