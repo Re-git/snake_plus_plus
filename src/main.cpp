@@ -264,7 +264,8 @@ int main(void){
                 explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
                 std::cout << "num of explosions" <<  explosions.size() << std::endl;
                 points = points + monkeyList.size();
-                monkeyList.clear();
+
+                // monkeyList.clear();
                 nuke.moveNuke();
                 nieuzyte.reset();
             }
@@ -311,14 +312,24 @@ int main(void){
       }
       if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySoundMulti(BCS);
 
-      for (Malpa &m : monkeyList)  // for every monkey in monkey list
+      for (size_t i=0; i<monkeyList.size(); i++)  // for every monkey in monkey list
       {
-        m.applyBehaviors(monkeyList, snake.position);
-        m.update();
-        if (snake.collide(m.monkeyRec)) 
+        if (monkeyList[i].dead)
+        {
+          monkeyList.erase(monkeyList.begin() + i);
+        }
+        
+        monkeyList[i].applyBehaviors(monkeyList, snake.position);
+        monkeyList[i].update();
+        if (snake.collide(monkeyList[i].monkeyRec)) 
         {
           gameState = deathScreen;
           PlaySound(GameOver);
+        }
+        for (size_t i = 0; i < explosions.size(); i++){
+          if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
+            monkeyList[i].dead = 1;
+          }
         }
       }
 

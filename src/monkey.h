@@ -19,6 +19,7 @@ public:
     float maxspeed;      // Maximum speed
     float maxSeparationForce; // siła odpychania się między małpkami
     float maxSeekForce;
+    int dead;
     Rectangle monkeyRec;
     Texture2D sprite;
 
