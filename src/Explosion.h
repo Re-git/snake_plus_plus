@@ -10,17 +10,15 @@
 
 class Explosion {
 public:
-    Texture2D sprite;
-    Area spawnArea;
+    Texture2D sprites[4];
     float explosionSize;
-    float growing;
+    int frame;
     Rectangle collisionMask;
     Vector2 position;
-    Explosion(Texture2D explosionSprite, Area gameArea);
-    void moveExplosion(float posX, float posY);
+    Explosion(Texture2D[4], float, float);
     void draw();
     void update();
-    void pulse(float, float);
+
 };
 
 

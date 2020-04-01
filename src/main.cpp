@@ -21,7 +21,6 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
-  int explosionState = 0;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenu;
   static Timer niezjedzone(10000);
@@ -46,7 +45,11 @@ int main(void){
   Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
   Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
   Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
-  Texture2D explosionSprite = LoadTexture("assets/sprites/effects/explosion3.png");
+  Texture2D explosionSprites[4];
+  explosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
+  explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
+  explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
+  explosionSprites[3] = LoadTexture("assets/sprites/effects/explosion4.png");
   Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
   Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
   Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
@@ -79,9 +82,10 @@ int main(void){
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
+  std::vector<Explosion> explosions;
   Fruits fruit(fruitSprite, gameArea);
   Nukes nuke(nukeSprite, gameArea);
-  Explosion explosion(explosionSprite, gameArea);
+
  
  
 
@@ -254,9 +258,10 @@ int main(void){
                     snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
                   }                
                 }
+
             if (snake.collide(nuke.collisionMask)){
-                explosionState = 1;
-                explosion.moveExplosion(snake.position.x, snake.position.y);
+                explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y));
+                std::cout << "num of explosions" <<  explosions.size() << std::endl;
                 points = points + monkeyList.size();
                 monkeyList.clear();
                 nuke.moveNuke();
@@ -274,8 +279,7 @@ int main(void){
       {
         for(int y=0;y<(GetScreenHeight()/128)+1;y++)
         {
-          DrawTexture(groundTile,x*128,y*128,WHITE);  
-                  
+          DrawTexture(groundTile,x*128,y*128,WHITE);          
         }
       }
 
@@ -335,9 +339,12 @@ int main(void){
       snake.update();
       snake.draw();
       fruit.draw();
-      nuke.draw();
-      if(explosionState==1)
-          explosion.draw();
+      nuke.draw();r
+      for (Explosion ex : explosions)
+      {
+        ex.update();
+        ex.draw();
+      }      
       EndDrawing();
     break;
     
@@ -353,7 +360,10 @@ int main(void){
   UnloadTexture(monkeySprite);
   UnloadTexture(fruitSprite);
   UnloadTexture(nukeSprite);
-  UnloadTexture(explosionSprite);
+  UnloadTexture(explosionSprites[1]);
+  UnloadTexture(explosionSprites[2]);
+  UnloadTexture(explosionSprites[3]);
+  UnloadTexture(explosionSprites[4]);
   UnloadTexture(groundTile);
   UnloadTexture(fenceSprite);
   UnloadTexture(fenceSprite_side);

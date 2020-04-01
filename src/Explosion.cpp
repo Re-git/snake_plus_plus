@@ -2,33 +2,30 @@
 #include "Explosion.h"
 
 
-Explosion::Explosion(Texture2D explosionSprite, Area gameArea) {
-    sprite = explosionSprite;
+Explosion::Explosion(Texture2D sprite[4],float x, float y) {
+    sprites[0] = sprite[0];
+    sprites[1] = sprite[1];
+    sprites[2] = sprite[2];
+    sprites[3] = sprite[3];
+    position.x = x;
+    position.y = y;
     explosionSize = 150;
-    spawnArea = gameArea;
-    growing = 0.5;
+    frame = 0;
 }
 
 void Explosion::draw(){
-    DrawTexturePro(sprite, { 0.0f, 0.0f, (float)sprite.width, (float)sprite.height },
+    DrawTexturePro(sprites[frame], { 0.0f, 0.0f, (float)sprites[frame].width, (float)sprites[frame].height },
         { position.x, position.y, explosionSize, explosionSize },
-        { explosionSize / 2,explosionSize / 2 }, 0, WHITE);
-}
-
-void Explosion::moveExplosion(float posX, float posY){
-
-    position.x = posX;
-    position.y = posY;
-    collisionMask = { position.x - explosionSize / 2,position.y - explosionSize / 2,explosionSize,explosionSize };
+        { explosionSize / 2,explosionSize / 2 }, 0, WHITE);      
 }
 
 void Explosion::update(){
-    pulse(40.0, 60.0);
-}
-
-void Explosion::pulse(float minSize, float maxSize){
-    explosionSize = explosionSize + growing;
-    if (explosionSize < minSize || explosionSize == maxSize){
-        growing *= -1;
-    }
+        if (frame<4)
+        {
+           frame++;
+        }
+        else
+        {
+            frame = 0;
+        }
 }
