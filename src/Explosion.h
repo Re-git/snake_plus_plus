@@ -10,7 +10,7 @@
 
 class Explosion {
 public:
-    Texture2D sprites[4];
+    Texture2D sprites[5];
     float explosionSize;
     int frame;
     int finished;
