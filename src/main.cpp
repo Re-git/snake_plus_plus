@@ -339,7 +339,7 @@ int main(void){
       snake.update();
       snake.draw();
       fruit.draw();
-      nuke.draw();r
+      nuke.draw();
       for (Explosion ex : explosions)
       {
         ex.update();
