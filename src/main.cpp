@@ -260,7 +260,7 @@ int main(void){
                 }
 
             if (snake.collide(nuke.collisionMask)){
-                explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y));
+                explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
                 std::cout << "num of explosions" <<  explosions.size() << std::endl;
                 points = points + monkeyList.size();
                 monkeyList.clear();
@@ -340,10 +340,10 @@ int main(void){
       snake.draw();
       fruit.draw();
       nuke.draw();
-      for (Explosion ex : explosions)
+      for (Explosion& ex : explosions)
       {
-        ex.update();
         ex.draw();
+        ex.update();
       }      
       EndDrawing();
     break;

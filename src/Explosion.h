@@ -15,7 +15,7 @@ public:
     int frame;
     Rectangle collisionMask;
     Vector2 position;
-    Explosion(Texture2D[4], float, float);
+    Explosion(Texture2D[4], float, float, size_t);
     void draw();
     void update();
 

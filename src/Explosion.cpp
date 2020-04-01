@@ -2,14 +2,14 @@
 #include "Explosion.h"
 
 
-Explosion::Explosion(Texture2D sprite[4],float x, float y) {
+Explosion::Explosion(Texture2D sprite[4],float x, float y, size_t tailSize) {
     sprites[0] = sprite[0];
     sprites[1] = sprite[1];
     sprites[2] = sprite[2];
     sprites[3] = sprite[3];
     position.x = x;
     position.y = y;
-    explosionSize = 150;
+    explosionSize = tailSize * 8;
     frame = 0;
 }
 
