@@ -340,10 +340,14 @@ int main(void){
       snake.draw();
       fruit.draw();
       nuke.draw();
-      for (Explosion& ex : explosions)
+      for (size_t i = 0; i < explosions.size(); i++)
       {
-        ex.draw();
-        ex.update();
+        explosions[i].draw();
+        explosions[i].update();
+        if (explosions[i].finished)
+        {
+          explosions.erase(explosions.begin()+i);
+        }
       }      
       EndDrawing();
     break;

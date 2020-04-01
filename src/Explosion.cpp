@@ -11,6 +11,7 @@ Explosion::Explosion(Texture2D sprite[4],float x, float y, size_t tailSize) {
     position.y = y;
     explosionSize = tailSize * 8;
     frame = 0;
+    finished = 0;
 }
 
 void Explosion::draw(){
@@ -26,6 +27,6 @@ void Explosion::update(){
         }
         else
         {
-            frame = 0;
+            finished = 1;
         }
 }
