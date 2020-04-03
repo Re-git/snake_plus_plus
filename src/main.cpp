@@ -26,7 +26,7 @@ int main(void){
   gameState = mainMenuState;
   static Timer niezjedzone(10000);
   static Timer nieuzyte(10000);
-  static Timer czas_punktowy(5000);      //5 sekund czasu gry
+  static Timer czas_punktowy(5000);
   static int frameCounter, points;
 
   // CREATE WINDOW
@@ -37,6 +37,8 @@ int main(void){
   SetWindowPosition(windowPosition.x, windowPosition.y);
   Image ikona = LoadImage("assets/sprites/gui/ikona3.png");
   SetWindowIcon(ikona);
+  HideCursor();
+
   
   // LOAD TEXTURES
   #include "loadTextures.h"
@@ -46,7 +48,7 @@ int main(void){
   #include "loadSounds.h"
   SetMusicVolume(IGS, 0.1);
 
-  // START RANDOM NUMBER GENERATOR
+  // RANDOM NUMBERS
   srand(time(NULL));
 
   // CREATE GAME OBJECTS
@@ -55,7 +57,7 @@ int main(void){
   std::vector<Explosion> explosions;
   Fruits fruit(fruitSprite, gameArea);
   Nukes nuke(nukeSprite, gameArea);
-  Gui mainMenu;
+  Gui gui;
 
   // MAIN LOOP
   while (!WindowShouldClose())
@@ -65,39 +67,6 @@ int main(void){
 
     switch (gameState)
     {
-    // MAIN MENU STATE
-    case mainMenuState:
-     HideCursor();
-      // KEYBOARD INPUT
-      if (IsKeyDown(KEY_ENTER)){
-        niezjedzone.reset();
-        czas_punktowy.reset();
-        gameState = inGameState;
-      }
-      mainMenu.checkCollisionsMainMenu(gameState);
-      mainMenu.drawMainMenu();
-    break;
-
-    // DEATH SCREEN STATE
-    case deathScreenState:
-      // CLEANUP
-      StopMusicStream(IGS);
-      monkeyList.clear();
-      snake = Snake(snakeSprite, 15);
-      fruit.moveFruit();
-      nuke.moveNuke();
-      // DRAWING
-      mainMenu.drawDeathMenu(points, frameCounter, gameState);
-      // KEYBOARD INPUT
-        if (IsKeyDown(KEY_ENTER)){
-          gameState = inGameState;
-          niezjedzone.reset();
-          czas_punktowy.reset();
-          points = 0;
-          frameCounter = 0;
-          }
-    break;
-
     // IN GAME STATE
     case inGameState:
       UpdateMusicStream(IGS);
@@ -141,11 +110,9 @@ int main(void){
           nieuzyte.reset();
       }
 
-      // DRAWING
+
       BeginDrawing();
       ClearBackground(BLACK);
-
-      // RAMKA - PRZESTRZEŃ GRY
       //RYSOWANIE PODŁOGI
       for(int x=0;x<(GetScreenWidth()/128)+1;x++)
       {
@@ -155,63 +122,63 @@ int main(void){
         }
       }
 
-      //GÓRNA CZĘŚĆ GUI
-      DrawRectangle(0,0,screenWidth,60, Color{8,8,8,133});
-      DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
-      DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);
-
       //RYSOWANIE RAMECZKI - BUSH
       for(int x = 0; x<(GetScreenWidth()+1); x=x+127)
       {
         DrawTexture(fenceSprite_side,x,58,WHITE);
         DrawTexture(fenceSprite_side_rotated,x,GetScreenHeight()-50,WHITE);
       }
-
       for(int y = 60; y<(GetScreenHeight()-44); y=y+70)
       {
         DrawTexture(fenceSprite,0,y,WHITE);
         DrawTexture(fenceSprite,GetScreenWidth()-40,y,WHITE);
       }
+      // GORNE GUI
+      gui.drawInGameGui(points, frameCounter);
 
 
-      if(czas_punktowy.isReady())   // 1 punkt za 5 sekund przezycia
+
+      if(czas_punktowy.isReady())
       {
       points++;
       czas_punktowy.reset(); 
       }
+
       if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySoundMulti(BCS);
 
-      for (size_t i=0; i<monkeyList.size(); i++)  // for every monkey in monkey list
+
+      for (size_t i = 0; i < explosions.size(); i++){ // Check if monkeys are hit by explosion
+        if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
+          monkeyList[i].dead = 1;
+        }
+      }
+      
+      for (size_t i=0; i<monkeyList.size(); i++)  
       {
-        if (monkeyList[i].dead)
+        if (monkeyList[i].dead) 
         {
-          monkeyList.erase(monkeyList.begin() + i);
+          monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
         }
         
         monkeyList[i].applyBehaviors(monkeyList, snake.position);
         monkeyList[i].update();
+
         if (snake.collide(monkeyList[i].monkeyRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
         }
-        for (size_t i = 0; i < explosions.size(); i++){
-          if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
-            monkeyList[i].dead = 1;
-          }
-        }
       }
 
-
-    static Timer timer(5000); // tworzymy timer i ustawiamy go na 5 sekund
-    if (timer.isReady())       // sprawdzamy czy już minęło 5 sek
+    static Timer timer(5000); 
+    if (timer.isReady())       
       {
           monkeyList.push_back(Malpa(monkeySprite));
           if (timer.getLimit() > 200)
           {
             timer.setLimit(timer.getLimit() - 1);
           }   
-          timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
+          timer.reset();        
       }
 
       snake.handleInput();
@@ -230,6 +197,39 @@ int main(void){
       }      
       EndDrawing();
     break;
+    
+    // MAIN MENU STATE
+    case mainMenuState:
+      // KEYBOARD INPUT
+      if (IsKeyDown(KEY_ENTER)){
+        niezjedzone.reset();
+        czas_punktowy.reset();
+        gameState = inGameState;
+      }
+      gui.checkCollisionsMainMenu(gameState);
+      gui.drawMainMenu();
+    break;
+
+    // DEATH SCREEN STATE
+    case deathScreenState:
+      // CLEANUP
+      StopMusicStream(IGS);
+      monkeyList.clear();
+      snake = Snake(snakeSprite, 15);
+      fruit.moveFruit();
+      nuke.moveNuke();
+      // DRAWING
+      gui.drawDeathMenu(points, frameCounter, gameState);
+      // KEYBOARD INPUT
+        if (IsKeyDown(KEY_ENTER)){
+          gameState = inGameState;
+          niezjedzone.reset();
+          czas_punktowy.reset();
+          points = 0;
+          frameCounter = 0;
+          }
+    break;
+
 
     case quitState:
     // CLEANUP
@@ -259,7 +259,6 @@ int main(void){
       std::cout << "INVALID GAME STATE" << std::endl;
     break;
     }
-
   }
   return 0;
 }
