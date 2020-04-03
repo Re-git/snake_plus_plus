@@ -24,7 +24,7 @@ int main(void){
   float screenHeight = 1000;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenuState;
-  static Timer niezjedzone(10000);
+  
   static Timer nieuzyte(10000);
   static Timer czas_punktowy(5000);
   static int frameCounter, points;
@@ -41,11 +41,26 @@ int main(void){
 
   
   // LOAD TEXTURES
-  #include "loadTextures.h"
+Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
+Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
+Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
+Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
+Texture2D explosionSprites[5];
+explosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
+explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
+explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
+explosionSprites[3] = LoadTexture("assets/sprites/effects/explosion4.png");
+explosionSprites[4] = LoadTexture("assets/sprites/effects/explosion5.png");
+Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
+Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
+Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
+Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
-  #include "loadSounds.h"
+  Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
+  Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
+  Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
   SetMusicVolume(IGS, 0.1);
 
   // RANDOM NUMBERS
@@ -55,8 +70,8 @@ int main(void){
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
   std::vector<Explosion> explosions;
-  Fruits fruit(fruitSprite, gameArea);
-  Nukes nuke(nukeSprite, gameArea);
+  Fruit fruit(fruitSprite, gameArea);
+  Nuke nuke(nukeSprite, gameArea);
   Gui gui;
 
   // MAIN LOOP
@@ -76,41 +91,13 @@ int main(void){
           PlayMusicStream(IGS);
       }
       frameCounter++;
-      fruit.update();
-      nuke.update();
-
-      if(niezjedzone.isReady())
-      {
-          fruit.moveFruit();
-          niezjedzone.reset();
-      }
-      if (nieuzyte.isReady()){
-          nuke.moveNuke();
-          nieuzyte.reset();
-      }
-
-      if(snake.collide(fruit.collisionMask))
-          {
-            points+=10;
-            fruit.moveFruit();
-            niezjedzone.reset();
-
-    
-            for (size_t i = 0; i < 2; i++)
-            {
-              snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
-            }                
-          }
-
       if (snake.collide(nuke.collisionMask)){
           explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
           std::cout << "num of explosions" <<  explosions.size() << std::endl;
           points = points + monkeyList.size();
           nuke.moveNuke();
-          nieuzyte.reset();
+          nuke.respawnTimer->reset();
       }
-
-
       BeginDrawing();
       ClearBackground(BLACK);
       //RYSOWANIE PODŁOGI
@@ -170,6 +157,8 @@ int main(void){
         }
       }
 
+
+
     static Timer timer(5000); 
     if (timer.isReady())       
       {
@@ -184,7 +173,7 @@ int main(void){
       snake.handleInput();
       snake.update();
       snake.draw();
-      fruit.draw();
+      fruit.draw(snake, points);
       nuke.draw();
       for (size_t i = 0; i < explosions.size(); i++)
       {
@@ -202,7 +191,7 @@ int main(void){
     case mainMenuState:
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER)){
-        niezjedzone.reset();
+        // niezjedzone.reset();
         czas_punktowy.reset();
         gameState = inGameState;
       }
@@ -223,7 +212,7 @@ int main(void){
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
           gameState = inGameState;
-          niezjedzone.reset();
+          // niezjedzone.reset();
           czas_punktowy.reset();
           points = 0;
           frameCounter = 0;
