@@ -37,7 +37,7 @@ int main(void){
   SetWindowPosition(windowPosition.x, windowPosition.y);
   Image ikona = LoadImage("assets/sprites/gui/ikona3.png");
   SetWindowIcon(ikona);
-  
+
   // LOAD TEXTURES
   #include "loadTextures.h"
 
@@ -94,11 +94,13 @@ int main(void){
       ClearBackground(GREEN);
 
       if(IsWindowResized()) 
-      {
+      { 
+        Texture2D temp = menuBG;
         menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
         menuBG = LoadTextureFromImage(menuBackground);
+        UnloadTexture(temp);
       }
-
+  
       if(IsKeyPressed(KEY_LEFT_SHIFT))
       {
       menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(), GetRandomValue(0,100), GetRandomValue(0,100), Color{static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),150},Color{static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,100)),150});
@@ -175,8 +177,10 @@ int main(void){
 
         if(IsWindowResized()) 
       {
+        Texture2D temp = menuBG;
         menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
         menuBG = LoadTextureFromImage(menuBackground);
+        UnloadTexture(temp);
       }
 
         DrawText(TextFormat("YOUR SCORE: %d", points),85+GetScreenWidth()/2 -scorebox.width/2,170+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
@@ -237,6 +241,14 @@ int main(void){
           // monkeyList.clear();
           nuke.moveNuke();
           nieuzyte.reset();
+      }
+
+      if(IsWindowResized()) 
+      {
+        Texture2D temp = menuBG;
+        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
+        menuBG = LoadTextureFromImage(menuBackground);
+        UnloadTexture(temp);
       }
 
       // DRAWING
