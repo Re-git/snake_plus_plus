@@ -8,26 +8,26 @@
 #include "libs/raymath.h"
 // Import naszych nagłówków
 #include "utility.h"
+#include "timer.h"
+#include "gui.h"
 #include "monkey.h"
 #include "snake.h"
-#include "timer.h"
 #include "Fruits.h"
 #include "Nukes.h"
 #include "Explosion.h"
 
-enum GameState {mainMenu, inGame, deathScreen, pause} gameState;
+GameState gameState;
 
 int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
   Area gameArea = {40, 80, 40, 80};
-  gameState = mainMenu;
+  gameState = mainMenuState;
   static Timer niezjedzone(10000);
   static Timer nieuzyte(10000);
   static Timer czas_punktowy(5000);      //5 sekund czasu gry
   static int frameCounter, points;
-  Vector2 mousePosition = {0.0f,0.0f};
 
   // CREATE WINDOW
   SetTargetFPS(60);
@@ -55,138 +55,42 @@ int main(void){
   std::vector<Explosion> explosions;
   Fruits fruit(fruitSprite, gameArea);
   Nukes nuke(nukeSprite, gameArea);
+  Gui mainMenu;
 
   // MAIN LOOP
   while (!WindowShouldClose())
   {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
-    mousePosition = GetMousePosition();
-    Rectangle btnBounds_start = {static_cast<float>(screenWidth/2)-static_cast<float>(startButton.width/2),
-                                                    static_cast<float>(screenHeight/2)-static_cast<float>(startButton.height/2),
-                                                    static_cast<float>(startButton.width),static_cast<float>(startButton.height)};
-    float quit_btn_y_offset = 125;
-    Rectangle btnBounds_quit = {static_cast<float>(screenWidth/2)-static_cast<float>(quitButton.width/2),
-                                                    static_cast<float>(screenHeight/2)-static_cast<float>(quitButton.height/2)+quit_btn_y_offset,
-                                                    static_cast<float>(quitButton.width),static_cast<float>(quitButton.height)};
-    float replay_btn_y_offset = 210;
-    Rectangle btnBounds_replay = {static_cast<float>(screenWidth/2)-static_cast<float>(replayButton.width),
-                                                       static_cast<float>(screenHeight/2)-static_cast<float>(replayButton.height/2)+replay_btn_y_offset,
-                                                       static_cast<float>(replayButton.width),static_cast<float>(replayButton.height)};
-    float back_btn_x_offset = 150;
-    float back_btn_y_offset = 210;
-    Rectangle btnBounds_back = {static_cast<float>(screenWidth/2)-static_cast<float>(backButton.width/2)+back_btn_x_offset,
-                                                     static_cast<float>(screenHeight/2)-static_cast<float>(backButton.height/2)+back_btn_y_offset,
-                                                     static_cast<float>(backButton.width),static_cast<float>(backButton.height)};
 
     switch (gameState)
     {
-    case mainMenu:
+    // MAIN MENU STATE
+    case mainMenuState:
      HideCursor();
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER)){
         niezjedzone.reset();
         czas_punktowy.reset();
-        gameState = inGame;
+        gameState = inGameState;
       }
-      // DRAWING  
-      BeginDrawing();
-      ClearBackground(GREEN);
-
-      if(IsWindowResized()) 
-      {
-        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
-        menuBG = LoadTextureFromImage(menuBackground);
-      }
-
-      if(IsKeyPressed(KEY_LEFT_SHIFT))
-      {
-      menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(), GetRandomValue(0,100), GetRandomValue(0,100), Color{static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),150},Color{static_cast<unsigned char>(GetRandomValue(0,255)),static_cast<unsigned char>(GetRandomValue(0,120)),static_cast<unsigned char>(GetRandomValue(0,100)),150});
-      menuBG = LoadTextureFromImage(menuBackground);
-      }
-      DrawTexture(menuBG,0,0,WHITE);
-      DrawTextureEx(menuLogo,Vector2{screenWidth/2-menuLogo.width/2,screenHeight/2-menuLogo.height-100},0,1,WHITE);
-      DrawTextureEx(startButton,Vector2{screenWidth/2-startButton.width/2,screenHeight/2-startButton.height/2},0,1,WHITE);
-      DrawTextureEx(quitButton,Vector2{screenWidth/2-quitButton.width/2,screenHeight/2-quitButton.height/2+quit_btn_y_offset},0,1,WHITE);
-      DrawTexture(kursor,mousePosition.x,mousePosition.y,WHITE);
-    
-      if(CheckCollisionPointRec(mousePosition ,btnBounds_start))
-      {
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-        {
-          PlaySound(klikniecie);
-          gameState = inGame; 
-        }
-      }
-
-      if(CheckCollisionPointRec(mousePosition ,btnBounds_quit))
-      {
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-        {
-          PlaySound(klikniecie);
-          goto sprzataczka;
-        }
-      }
-      EndDrawing();
+      mainMenu.checkCollisionsMainMenu(gameState);
+      mainMenu.drawMainMenu();
     break;
 
-    case deathScreen:
+    // DEATH SCREEN STATE
+    case deathScreenState:
       // CLEANUP
       StopMusicStream(IGS);
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
       nuke.moveNuke();
-
-
       // DRAWING
-        BeginDrawing();
-        ClearBackground(GREEN);
-        DrawTexture(menuBG,0,0,WHITE);
-        DrawTexture(scorebox,(GetScreenWidth()/2)-scorebox.width/2,(GetScreenHeight()/2)-50-scorebox.height/2,WHITE);
-        DrawTextureEx(replayButton,Vector2{btnBounds_replay.x,btnBounds_replay.y},0,1,WHITE);
-        DrawTextureEx(backButton,Vector2{btnBounds_back.x,btnBounds_back.y},0,1,WHITE);
-
-        if(CheckCollisionPointRec(mousePosition, btnBounds_replay))
-      {
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-        {
-          niezjedzone.reset();
-          czas_punktowy.reset();
-          points = 0;
-          frameCounter = 0;
-          PlaySound(klikniecie);
-          gameState = inGame; 
-        }
-      }
-  
-        if(CheckCollisionPointRec(mousePosition, btnBounds_back))
-      {
-        if(IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-        {
-          niezjedzone.reset();
-          czas_punktowy.reset();
-          points = 0;
-          frameCounter = 0;
-          PlaySound(klikniecie);
-          gameState = mainMenu;
-        }
-      }
-
-        if(IsWindowResized()) 
-      {
-        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
-        menuBG = LoadTextureFromImage(menuBackground);
-      }
-
-        DrawText(TextFormat("YOUR SCORE: %d", points),85+GetScreenWidth()/2 -scorebox.width/2,170+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
-        DrawText(TextFormat("TIME SURVIVED: %ds", frameCounter/60),30+(GetScreenWidth()/2)-scorebox.width/2,120+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
-        mousePosition = GetMousePosition();
-        DrawTexture(kursor,mousePosition.x,mousePosition.y,WHITE);
-        EndDrawing();
+      mainMenu.drawDeathMenu(points, frameCounter, gameState);
       // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)){
-          gameState = inGame;
+          gameState = inGameState;
           niezjedzone.reset();
           czas_punktowy.reset();
           points = 0;
@@ -194,8 +98,8 @@ int main(void){
           }
     break;
 
-    case inGame:
-
+    // IN GAME STATE
+    case inGameState:
       UpdateMusicStream(IGS);
       if(!(IsMusicPlaying(IGS)))
       {
@@ -233,8 +137,6 @@ int main(void){
           explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
           std::cout << "num of explosions" <<  explosions.size() << std::endl;
           points = points + monkeyList.size();
-
-          // monkeyList.clear();
           nuke.moveNuke();
           nieuzyte.reset();
       }
@@ -290,7 +192,7 @@ int main(void){
         monkeyList[i].update();
         if (snake.collide(monkeyList[i].monkeyRec)) 
         {
-          gameState = deathScreen;
+          gameState = deathScreenState;
           PlaySound(GameOver);
         }
         for (size_t i = 0; i < explosions.size(); i++){
@@ -312,7 +214,6 @@ int main(void){
           timer.reset();        // resetujemy stoper i zaczynamy liczyć 5 sek od początku
       }
 
-
       snake.handleInput();
       snake.update();
       snake.draw();
@@ -329,42 +230,36 @@ int main(void){
       }      
       EndDrawing();
     break;
-    
+
+    case quitState:
+    // CLEANUP
+    UnloadTexture(snakeSprite);
+    UnloadTexture(monkeySprite);
+    UnloadTexture(fruitSprite);
+    UnloadTexture(nukeSprite);
+    UnloadTexture(explosionSprites[1]);
+    UnloadTexture(explosionSprites[2]);
+    UnloadTexture(explosionSprites[3]);
+    UnloadTexture(explosionSprites[4]);
+    UnloadTexture(groundTile);
+    UnloadTexture(fenceSprite);
+    UnloadTexture(fenceSprite_side);
+    UnloadTexture(fenceSprite_side_rotated);
+    UnloadImage(ikona);
+    StopSoundMulti();
+    UnloadSound(BCS);
+    UnloadSound(GameOver);
+    UnloadMusicStream(IGS);
+    CloseAudioDevice();
+    CloseWindow();
+    exit(1);
+    break;
+
     default:
       std::cout << "INVALID GAME STATE" << std::endl;
     break;
     }
 
   }
-  // CLEANUP
-  sprzataczka:
-  UnloadTexture(snakeSprite);
-  UnloadTexture(monkeySprite);
-  UnloadTexture(fruitSprite);
-  UnloadTexture(nukeSprite);
-  UnloadTexture(explosionSprites[1]);
-  UnloadTexture(explosionSprites[2]);
-  UnloadTexture(explosionSprites[3]);
-  UnloadTexture(explosionSprites[4]);
-  UnloadTexture(groundTile);
-  UnloadTexture(fenceSprite);
-  UnloadTexture(fenceSprite_side);
-  UnloadTexture(fenceSprite_side_rotated);
-  UnloadTexture(startButton);
-  UnloadTexture(quitButton);
-  UnloadTexture(menuLogo);
-  UnloadTexture(menuBG);
-  UnloadTexture(kursor);
-  UnloadTexture(replayButton);
-  UnloadTexture(backButton);
-  UnloadImage(menuBackground);
-  UnloadImage(ikona);
-  StopSoundMulti();
-  UnloadSound(BCS);
-  UnloadSound(GameOver);
-  UnloadSound(klikniecie);
-  UnloadMusicStream(IGS);
-  CloseAudioDevice();
-  CloseWindow();
   return 0;
 }

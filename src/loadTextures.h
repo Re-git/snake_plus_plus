@@ -16,14 +16,5 @@ Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
-Texture2D startButton = LoadTexture("assets/sprites/gui/start4.png");
-Texture2D quitButton = LoadTexture("assets/sprites/gui/quit3.png");
-Texture2D replayButton = LoadTexture("assets/sprites/gui/replay_small.png");
-Texture2D scorebox = LoadTexture("assets/sprites/gui/scorebox.png");
-Texture2D kursor = LoadTexture("assets/sprites/gui/cursor.png");
-Texture2D menuLogo = LoadTexture("assets/sprites/gui/logo3_small.png");
-Texture2D backButton = LoadTexture("assets/sprites/gui/menu3.png");
-Image menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
-Texture2D menuBG = LoadTextureFromImage(menuBackground);
 
 #endif
