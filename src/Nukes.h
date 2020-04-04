@@ -6,20 +6,25 @@
 #include "stdlib.h"
 #include <vector>
 #include "utility.h"
+#include "timer.h"
+#include "snake.h"
+#include "monkey.h"
+#include "Explosion.h"
 
 
-class Nukes {
+class Nuke {
 public:
     Texture2D sprite;
     Area spawnArea;
     float nukeSize;
     float growing;
+    Timer* respawnTimer;
     Rectangle collisionMask;
     Vector2 position;
-    Nukes(Texture2D nukeSprite, Area gameArea);
+    Nuke(Texture2D nukeSprite, Area gameArea);
+    ~Nuke();
     void moveNuke();
     void draw();
-    void update();
     void pulse(float, float);
 };
 
