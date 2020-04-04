@@ -98,6 +98,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           nuke.moveNuke();
           nuke.respawnTimer->reset();
       }
+      
       BeginDrawing();
       ClearBackground(BLACK);
       //RYSOWANIE PODŁOGI
@@ -123,18 +124,15 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       // GORNE GUI
       gui.drawInGameGui(points, frameCounter);
 
-
-
       if(czas_punktowy.isReady())
       {
       points++;
       czas_punktowy.reset(); 
       }
 
-      if(snake.checkCollisionWithEdges(snake.position,BCS)==true) PlaySoundMulti(BCS);
+      if(snake.checkCollisionWithEdges(snake.position,BCS)==true) {PlaySoundMulti(BCS);}
 
-
-      for (size_t i = 0; i < explosions.size(); i++){ // Check if monkeys are hit by explosion
+      for (size_t i = 0; i < explosions.size() && i<monkeyList.size(); i++){ // Check if monkeys are hit by explosion
         if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
           monkeyList[i].dead = 1;
         }
@@ -156,8 +154,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           PlaySound(GameOver);
         }
       }
-
-
 
     static Timer timer(5000); 
     if (timer.isReady())       
@@ -191,7 +187,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     case mainMenuState:
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER)){
-        // niezjedzone.reset();
         czas_punktowy.reset();
         gameState = inGameState;
       }
@@ -201,22 +196,18 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
 
     // DEATH SCREEN STATE
     case deathScreenState:
-      // CLEANUP
       StopMusicStream(IGS);
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
       fruit.moveFruit();
-      nuke.moveNuke();
-      // DRAWING
+      nuke.moveNuke();   
       gui.drawDeathMenu(points, frameCounter, gameState);
-      // KEYBOARD INPUT
-        if (IsKeyDown(KEY_ENTER)){
-          gameState = inGameState;
-          // niezjedzone.reset();
-          czas_punktowy.reset();
-          points = 0;
-          frameCounter = 0;
-          }
+      if (IsKeyDown(KEY_ENTER)){
+        gameState = inGameState;
+        czas_punktowy.reset();
+        points = 0;
+        frameCounter = 0;
+        }
     break;
 
 
