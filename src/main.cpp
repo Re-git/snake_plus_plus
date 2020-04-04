@@ -132,7 +132,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
 
       if(snake.checkCollisionWithEdges(snake.position,BCS)==true) {PlaySoundMulti(BCS);}
 
-      for (size_t i = 0; i < explosions.size() && i<monkeyList.size(); i++){ // Check if monkeys are hit by explosion
+
+      for (size_t i = 0; i < explosions.size() && i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
         if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
           monkeyList[i].dead = 1;
         }
