@@ -53,7 +53,7 @@ explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
 explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
 explosionSprites[3] = LoadTexture("assets/sprites/effects/explosion4.png");
 explosionSprites[4] = LoadTexture("assets/sprites/effects/explosion5.png");
-Texture2D frostNukeSprite = LoadTexture("assets/sprites/powerups/potion.png");
+Texture2D frostNukeSprite = LoadTexture("assets/sprites/powerups/potions (1).png");
 Texture2D frostExplosionSprites[5];
 frostExplosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
 frostExplosionSprites[1] = LoadTexture("assets/sprites/effects/frostExplosion2.png");
@@ -170,18 +170,17 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
 
           for (size_t i = 0; i < frostExplosion.size() && i < monkeyList.size(); i++) { // Check if monkeys are hit by frostExplosion
               if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
-                                          monkeyList[i].monkeyRec)) {
+                                          monkeyList[i].monkeyRec)) 
+              {
                   monkeyList[i].frozen = 1;
+                  monkeyList[i].maxspeed = 0;
               }
           }
-          static Timer frozenTimer(1500);
+          static Timer frozenTimer(5000);
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
                   if(frozenTimer.isReady()) {
-                      monkeyList[i].maxspeed = 0;// freez monkeys
-                      if(frozenTimer.getLimit()>1499){
-                          monkeyList[i].maxspeed = 1.5;
-                      }
+                      monkeyList[i].maxspeed = 1.5;   // freez monkeys
                       frozenTimer.reset();
                   }
               }
