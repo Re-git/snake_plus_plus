@@ -57,8 +57,10 @@ BeginDrawing();
 
     if(IsWindowResized()) 
     {
+    Texture2D temp = menuBG;
     menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
     menuBG = LoadTextureFromImage(menuBackground);
+    UnloadTexture(temp);
     }
 
     if(IsKeyPressed(KEY_LEFT_SHIFT))
@@ -153,10 +155,12 @@ void Gui::drawDeathMenu(int points, int frameCounter, GameState& gameState)
       }
 
         if(IsWindowResized()) 
-      {
+        {
+        Texture2D temp = menuBG;
         menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
         menuBG = LoadTextureFromImage(menuBackground);
-      }
+        UnloadTexture(temp);
+        }
 
         DrawText(TextFormat("YOUR SCORE: %d", points),85+GetScreenWidth()/2 -scorebox.width/2,170+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
         DrawText(TextFormat("TIME SURVIVED: %ds", frameCounter/60),30+(GetScreenWidth()/2)-scorebox.width/2,120+GetScreenHeight()/2-scorebox.height/2, 50,BLACK);
@@ -169,7 +173,14 @@ void Gui::drawInGameGui(int points, int frameCounter)
     int screenWidth = GetScreenWidth();
     // int screenHeight = GetScreenHeight();
     //GÓRNA CZĘŚĆ GUI
-      DrawRectangle(0,0,screenWidth,60, Color{8,8,8,133});
+      if(IsWindowResized()) 
+      {
+        Texture2D temp = menuBG;
+        menuBackground = GenImageChecked(GetScreenWidth(), GetScreenHeight(),3,10,BLACK,DARKGREEN);
+        menuBG = LoadTextureFromImage(menuBackground);
+        UnloadTexture(temp);
+      }
+      DrawRectangle(0,0,screenWidth,60, Color{8,8,8,200});
       DrawText(TextFormat("PUNKTY: %d",points),30,15,35,RAYWHITE);
       DrawText(TextFormat("CZAS: %d",frameCounter/60),screenWidth-200,15,35,RAYWHITE);
 }

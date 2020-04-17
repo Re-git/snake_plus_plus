@@ -22,15 +22,17 @@ int main(void){
   // INITIALIZE VARIABLES
   float screenWidth = 1420;
   float screenHeight = 1000;
+  float wkurwiacz = 1.5;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenuState;
   
-  static Timer nieuzyte(10000);
-  static Timer czas_punktowy(5000);
-  static int frameCounter, points;
+  static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
+  static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
+  static Timer czas_trudnosci(100000);   // ZMIANA TILESA
+  static int frameCounter, points, rodzaj;
 
   // CREATE WINDOW
-  SetTargetFPS(60);
+  SetTargetFPS(120);
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow((int)screenWidth, (int)screenHeight, "Snake");
   Vector2 windowPosition = {100, 100};
@@ -42,7 +44,7 @@ int main(void){
   
   // LOAD TEXTURES
 Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
-Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/monkey.png");
+Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/malpa_angry.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
@@ -51,7 +53,7 @@ explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
 explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
 explosionSprites[3] = LoadTexture("assets/sprites/effects/explosion4.png");
 explosionSprites[4] = LoadTexture("assets/sprites/effects/explosion5.png");
-Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
+Texture2D groundTiles[10] = {LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png"), LoadTexture("assets/sprites/tiles/poziomy/stone.jpg"),LoadTexture("assets/sprites/tiles/poziomy/Ground_Tile_02_C.png"),LoadTexture("assets/sprites/tiles/poziomy/tile_stoneSlabs.png"),LoadTexture("assets/sprites/tiles/poziomy/cegly.jpg"),LoadTexture("assets/sprites/tiles/poziomy/sand.jpg"), LoadTexture("assets/sprites/tiles/poziomy/snow.jpg"), LoadTexture("assets/sprites/tiles/poziomy/marble.jpg"), LoadTexture("assets/sprites/tiles/poziomy/water2.png"), LoadTexture("assets/sprites/tiles/poziomy/magma.jpg")};
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
@@ -93,7 +95,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       frameCounter++;
       if (snake.collide(nuke.collisionMask)){
           explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
-          std::cout << "num of explosions" <<  explosions.size() << std::endl;
+          // std::cout << "num of explosions" <<  explosions.size() << std::endl;
           points = points + monkeyList.size();
           nuke.moveNuke();
           nuke.respawnTimer->reset();
@@ -102,13 +104,21 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       BeginDrawing();
       ClearBackground(BLACK);
       //RYSOWANIE PODŁOGI
+
       for(int x=0;x<(GetScreenWidth()/128)+1;x++)
       {
         for(int y=0;y<(GetScreenHeight()/128)+1;y++)
         {
-          DrawTexture(groundTile,x*128,y*128,WHITE);          
+          DrawTexture(groundTiles[rodzaj],x*128,y*128,WHITE);
         }
       }
+
+       if(czas_trudnosci.isReady())
+      {
+        rodzaj++;
+        czas_trudnosci.reset();
+      } 
+      
 
       //RYSOWANIE RAMECZKI - BUSH
       for(int x = 0; x<(GetScreenWidth()+1); x=x+127)
@@ -145,14 +155,24 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         {
           monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
         }
-        
+
         monkeyList[i].applyBehaviors(monkeyList, snake.position);
         monkeyList[i].update();
+
+        // WARUNEK ZMIANY TRUDNOŚCI - CO 100PKT
+        int aktualny_poziom = 0;
+        if(points>99+aktualny_poziom && points<99+aktualny_poziom+12)
+        {
+          aktualny_poziom+=100;
+          wkurwiacz+=0.0015;
+        }
+        monkeyList[i].maxspeed = wkurwiacz;
 
         if (snake.collide(monkeyList[i].monkeyRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
+          monkeyList[i].maxspeed = 1.5;
         }
       }
 
@@ -188,7 +208,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     case mainMenuState:
       // KEYBOARD INPUT
       if (IsKeyDown(KEY_ENTER)){
-        czas_punktowy.reset();
         gameState = inGameState;
       }
       gui.checkCollisionsMainMenu(gameState);
@@ -200,14 +219,26 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       StopMusicStream(IGS);
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
+      
       fruit.moveFruit();
       nuke.moveNuke();   
       gui.drawDeathMenu(points, frameCounter, gameState);
-      if (IsKeyDown(KEY_ENTER)){
+
+        if (IsKeyDown(KEY_ENTER))
+        {
         gameState = inGameState;
+        }
+
+        // odupośledzenie przycisków po refactoringu - czyszczenie zmiennych przed next runda
+        if(gameState==inGameState || gameState==mainMenuState)
+        {
+        gameState = (gameState==inGameState) ? inGameState : mainMenuState;
         czas_punktowy.reset();
+        czas_trudnosci.reset();
+        wkurwiacz = 1.5;
         points = 0;
         frameCounter = 0;
+        rodzaj = 0;
         }
     break;
 
@@ -222,7 +253,16 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     UnloadTexture(explosionSprites[2]);
     UnloadTexture(explosionSprites[3]);
     UnloadTexture(explosionSprites[4]);
-    UnloadTexture(groundTile);
+    UnloadTexture(groundTiles[0]);
+    UnloadTexture(groundTiles[1]);
+    UnloadTexture(groundTiles[2]);
+    UnloadTexture(groundTiles[3]);
+    UnloadTexture(groundTiles[4]);
+    UnloadTexture(groundTiles[5]);
+    UnloadTexture(groundTiles[6]);
+    UnloadTexture(groundTiles[7]);
+    UnloadTexture(groundTiles[8]);
+    UnloadTexture(groundTiles[9]);
     UnloadTexture(fenceSprite);
     UnloadTexture(fenceSprite_side);
     UnloadTexture(fenceSprite_side_rotated);
