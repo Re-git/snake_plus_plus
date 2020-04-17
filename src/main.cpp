@@ -182,6 +182,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   if(frozenTimer.isReady()) {
                       monkeyList[i].maxspeed = 1.5;   // freez monkeys
                       frozenTimer.reset();
+                      monkeyList[i].frozen = 0;
                   }
               }
 
