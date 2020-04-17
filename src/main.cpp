@@ -15,7 +15,7 @@
 #include "Fruits.h"
 #include "Nukes.h"
 #include "Explosion.h"
-
+#include "BulletTime.h"
 GameState gameState;
 
 int main(void){
@@ -26,7 +26,7 @@ int main(void){
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenuState;
   
-  static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
+  // static Timer nieuzyte(10000);         // nieużyty timer nieużyte >.<
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -57,6 +57,7 @@ Texture2D groundTiles[10] = {LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
+Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericItem_color_089.png"),LoadTexture("assets/sprites/powerups/genericItem_color_090.png")};
 
   // LOAD SOUNDS
   InitAudioDevice();
@@ -73,6 +74,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   std::vector<Malpa> monkeyList;
   std::vector<Explosion> explosions;
   Fruit fruit(fruitSprite, gameArea);
+  Bullet bullet(bulletTimeSprite, gameArea);
   Nuke nuke(nukeSprite, gameArea);
   Gui gui;
 
@@ -81,7 +83,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
-
     switch (gameState)
     {
     // IN GAME STATE
@@ -172,6 +173,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
+          bullet.N = 0;
           monkeyList[i].maxspeed = 1.5;
         }
       }
@@ -191,6 +193,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       snake.update();
       snake.draw();
       fruit.draw(snake, points);
+      bullet.draw(snake,points);
       nuke.draw();
       for (size_t i = 0; i < explosions.size(); i++)
       {
@@ -215,12 +218,14 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     break;
 
     // DEATH SCREEN STATE
-    case deathScreenState:
+      case deathScreenState:
       StopMusicStream(IGS);
       monkeyList.clear();
       snake = Snake(snakeSprite, 15);
-      
+      SetTargetFPS(60);
       fruit.moveFruit();
+      bullet.N = 1;
+      bullet.moveBulletTime();
       nuke.moveNuke();   
       gui.drawDeathMenu(points, frameCounter, gameState);
 
@@ -239,6 +244,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         points = 0;
         frameCounter = 0;
         rodzaj = 0;
+        bullet.N = 0;
+        SetTargetFPS(60);
         }
     break;
 
