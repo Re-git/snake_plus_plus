@@ -63,7 +63,6 @@ frostExplosionSprites[1] = LoadTexture("assets/sprites/effects/frostExplosion2.p
 frostExplosionSprites[2] = LoadTexture("assets/sprites/effects/frostExplosion3.png");
 frostExplosionSprites[3] = LoadTexture("assets/sprites/effects/frostExplosion4.png");
 frostExplosionSprites[4] = LoadTexture("assets/sprites/effects/frostExplosion5.png");
-Texture2D groundTile = LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png");
 Texture2D groundTiles[10] = {LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.png"), LoadTexture("assets/sprites/tiles/poziomy/stone.jpg"),LoadTexture("assets/sprites/tiles/poziomy/Ground_Tile_02_C.png"),LoadTexture("assets/sprites/tiles/poziomy/tile_stoneSlabs.png"),LoadTexture("assets/sprites/tiles/poziomy/cegly.jpg"),LoadTexture("assets/sprites/tiles/poziomy/sand.jpg"), LoadTexture("assets/sprites/tiles/poziomy/snow.jpg"), LoadTexture("assets/sprites/tiles/poziomy/marble.jpg"), LoadTexture("assets/sprites/tiles/poziomy/water2.png"), LoadTexture("assets/sprites/tiles/poziomy/magma.jpg")};
   
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
@@ -99,7 +98,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     switch (gameState)
     {
     // IN GAME STATE
-    case inGameState:{
+    case inGameState:
       UpdateMusicStream(IGS);
       if(!(IsMusicPlaying(IGS)))
       {
@@ -179,9 +178,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
         }
 
-        monkeyList[i].applyBehaviors(monkeyList, snake.position);
-        monkeyList[i].update();
-
         // WARUNEK ZMIANY TRUDNOŚCI - CO 100PKT
         int aktualny_poziom = 0;
         if(points>99+aktualny_poziom && points<99+aktualny_poziom+12)
@@ -199,10 +195,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         }
       }
 
-          monkeyList[i].applyBehaviors(monkeyList, snake.position);
-          monkeyList[i].update();
-      }
-
           for (size_t i = 0; i < frostExplosion.size() && i < monkeyList.size(); i++) { // Check if monkeys are hit by frostExplosion
               if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
                                           monkeyList[i].monkeyRec)) 
@@ -211,25 +203,19 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   monkeyList[i].maxspeed = 0;
               }
           }
-          static Timer frozenTimer(5000);
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
+                  static Timer frozenTimer(5000);
                   if(frozenTimer.isReady()) {
                       monkeyList[i].maxspeed = 1.5;   // freez monkeys
                       frozenTimer.reset();
                       monkeyList[i].frozen = 0;
                   }
               }
-
-              monkeyList[i].applyBehaviors(monkeyList, snake.position);
+              if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
+            
               monkeyList[i].update();
-
-
-              if (snake.collide(monkeyList[i].monkeyRec)) {
-                  gameState = deathScreenState;
-                  PlaySound(GameOver);
               }
-          }
 
           static Timer timer(5000);
           if (timer.isReady()) {
@@ -260,19 +246,12 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                 frostExplosion.erase(frostExplosion.begin() + i);
             }
         }
-
-      }      
+    
       EndDrawing();
     break;
-    
+
     // MAIN MENU STATE
-    case mainMenuState:
-      // KEYBOARD INPUT
-      if (IsKeyDown(KEY_ENTER)){
-        gameState = inGameState;
-      }
-    // MAIN MENU STATE
-    case mainMenuState: {
+    case mainMenuState: 
         // KEYBOARD INPUT
         if (IsKeyDown(KEY_ENTER)) {
             czas_punktowy.reset();
@@ -281,7 +260,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         gui.checkCollisionsMainMenu(gameState);
         gui.drawMainMenu();
         break;
-    }
+    
     // DEATH SCREEN STATE
 
     case deathScreenState:
