@@ -1,7 +1,4 @@
-
 #include "Fruits.h"
-
-
 
 Fruit::Fruit(Texture2D fruitSprite, Area gameArea) {
     respawnTimer = new Timer{10000};
