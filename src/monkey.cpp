@@ -55,7 +55,7 @@ void Malpa::limit(Vector2 &v, float num)
     if (v.y < -num) {v.y = -num;}
 }
 
-void Malpa::applyBehaviors(std::vector<Malpa> malpy, Vector2 snakePosition) {
+void Malpa::applyBehaviors(std::vector<Malpa>& malpy, Vector2 snakePosition) {
      Vector2 separateForce = separate(malpy);
      Vector2 seekForce = seek(snakePosition);
      separateForce = Vector2Scale(separateForce, 2);
@@ -81,7 +81,7 @@ Vector2 Malpa::seek(Vector2 target) {
 
 // Separation
 // Method checks for nearby malpy and steers away
-Vector2 Malpa::separate (std::vector<Malpa> malpy) {
+Vector2 Malpa::separate (std::vector<Malpa> &malpy) {
   Vector2 sum{0,0};
   int count = 0;
   // For every malpa in the system, check if it's too close
