@@ -53,7 +53,7 @@ explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
 explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
 explosionSprites[3] = LoadTexture("assets/sprites/effects/explosion4.png");
 explosionSprites[4] = LoadTexture("assets/sprites/effects/explosion5.png");
-Texture2D frostNukeSprite = LoadTexture("assets/sprites/powerups/potions (1).png");
+Texture2D frostNukeSprite = LoadTexture("assets/sprites/powerups/potion.png");
 Texture2D frostExplosionSprites[5];
 frostExplosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
 frostExplosionSprites[1] = LoadTexture("assets/sprites/effects/frostExplosion2.png");
@@ -246,6 +246,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         snake = Snake(snakeSprite, 15);
         fruit.moveFruit();
         nuke.moveNuke();
+        frostNuke.moveFrostNuke();
         gui.drawDeathMenu(points, frameCounter, gameState);
         if (IsKeyDown(KEY_ENTER)) {
             gameState = inGameState;
