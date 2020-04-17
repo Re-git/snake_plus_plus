@@ -32,7 +32,7 @@ int main(void){
   static int frameCounter, points, rodzaj;
 
   // CREATE WINDOW
-  SetTargetFPS(120);
+  SetTargetFPS(60);
   SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
   InitWindow((int)screenWidth, (int)screenHeight, "Snake");
   Vector2 windowPosition = {100, 100};
