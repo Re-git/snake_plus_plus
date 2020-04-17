@@ -13,14 +13,15 @@ Malpa::Malpa(Texture2D monkeySprite)
     maxspeed = 0.5;                       // max prędkość danej małpki
     maxSeparationForce = 0.015;       // siła odpychania się między małpkami
     maxSeekForce = 0.055;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
-    dead =0 ;
+    dead = 0;
+    frozen = 0;
 }
 
 void Malpa::draw()
 {
     monkeyRec = {position.x,position.y,width, height};
     DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
-                        monkeyRec, {0.0f, 0.0f},0.0f, WHITE);
+                        monkeyRec, {0.0f, 0.0f},0.0f, (frozen==0) ? WHITE : SKYBLUE);
 }
 
 void Malpa::update()
