@@ -19,9 +19,9 @@ public:
     Timer* respawnTimer;
     Rectangle collisionMask;
     Vector2 position;
+    bool podniesiony;
     int N;
     Bullet(Texture2D BulletTimeSprite[2] ,Area gameArea);
-    ~Bullet();
     void moveBulletTime();
     void draw(Snake& snake, int& points);
     void pulse(float, float);

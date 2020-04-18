@@ -1,19 +1,14 @@
 #include "BulletTime.h"
 
 Bullet::Bullet(Texture2D BulletTimeSprite[2], Area gameArea) {
-    respawnTimer = new Timer{5000};
     sprite[0] = BulletTimeSprite[0];
     sprite[1] = BulletTimeSprite[1];
-    BulletTimeSize = 40;
+    BulletTimeSize = 35;
     spawnArea = gameArea;
     growing = 0.5;
     N = 0;
+    podniesiony = false;
     moveBulletTime();
-}
-
-Bullet::~Bullet()
-{
-    delete respawnTimer;
 }
 
 void Bullet::moveBulletTime() {
@@ -22,31 +17,31 @@ void Bullet::moveBulletTime() {
     collisionMask= {position.x-BulletTimeSize/2,position.y-BulletTimeSize/2,BulletTimeSize,BulletTimeSize};
 }
 void Bullet::draw(Snake& snake, int& points)
-{  
-    if(snake.collide(collisionMask))
+{
+  
+    if(snake.collide(collisionMask) && podniesiony == false)
     {
         N=1;
         moveBulletTime();
         points-=5;
         SetTargetFPS((20));
-
-        for (size_t i = 0; i < 2; i++)
-        {
-            snake.tail.push_back(Vector2{snake.position.x, snake.position.y});
-        }                
-        if(respawnTimer->isReady())
-        {
-          N=0;
-          moveBulletTime();
-          SetTargetFPS(60);
-          respawnTimer->reset();
-        }
+        podniesiony = true;   
     }
 
+    if(snake.collide(collisionMask) && podniesiony == true)
+    {
+        N=0;
+        moveBulletTime();
+        points-=5;
+        SetTargetFPS(60);
+        podniesiony = false;
+    }
+    
     pulse(40.0,60.0);
     DrawTexturePro(sprite[N], {0.0f, 0.0f, (float)sprite[N].width, (float)sprite[N].height},
                                      {position.x, position.y, BulletTimeSize, BulletTimeSize},
                                      {BulletTimeSize/2,BulletTimeSize/2},0, WHITE);
+
 }
 
 void Bullet::pulse(float minSize, float maxSize)

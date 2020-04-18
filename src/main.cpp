@@ -95,7 +95,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
       }
       frameCounter++;
       if (snake.collide(nuke.collisionMask)){
-          explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
+          explosions.emplace_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
           // std::cout << "num of explosions" <<  explosions.size() << std::endl;
           points = points + monkeyList.size();
           nuke.moveNuke();
@@ -174,6 +174,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
           gameState = deathScreenState;
           PlaySound(GameOver);
           bullet.N = 0;
+          bullet.podniesiony = 0;
           monkeyList[i].maxspeed = 1.5;
         }
       }
@@ -181,7 +182,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
     static Timer timer(5000); 
     if (timer.isReady())       
       {
-          monkeyList.push_back(Malpa(monkeySprite));
+          monkeyList.emplace_back(Malpa(monkeySprite));
           if (timer.getLimit() > 200)
           {
             timer.setLimit(timer.getLimit() - 1);
@@ -224,7 +225,6 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
       snake = Snake(snakeSprite, 15);
       SetTargetFPS(60);
       fruit.moveFruit();
-      bullet.N = 1;
       bullet.moveBulletTime();
       nuke.moveNuke();   
       gui.drawDeathMenu(points, frameCounter, gameState);
@@ -245,6 +245,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
         frameCounter = 0;
         rodzaj = 0;
         bullet.N = 0;
+        bullet.podniesiony = 0;
         SetTargetFPS(60);
         }
     break;
