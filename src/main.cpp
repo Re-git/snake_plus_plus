@@ -17,6 +17,7 @@
 #include "Explosion.h"
 #include "FrostExplosion.h"
 #include "FrostNuke.h"
+#include "pig.h"
 
 GameState gameState;
 
@@ -47,6 +48,7 @@ int main(void){
   // LOAD TEXTURES
 Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
 Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/malpa_angry.png");
+Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/pig_angry.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
@@ -82,6 +84,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
+  std::vector<Pig> pigList;
   std::vector<Explosion> explosions;
   std::vector<FrostExplosion> frostExplosion;
   FrostNuke frostNuke(frostNukeSprite, gameArea);
@@ -168,6 +171,9 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
           monkeyList[i].dead = 1;
         }
+        if (CheckCollisionCircleRec(explosions[i].position, explosions[i].explosionSize, pigList[i].pigRec)) {
+            pigList.remove();
+        }
       }
       
 
@@ -202,6 +208,11 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   monkeyList[i].frozen = 1;
                   monkeyList[i].maxspeed = 0;
               }
+              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize, pigList[i].pigRec))
+              {
+                  pigList[i].frozen = 1;
+                  pigList[i].maxspeed = 0;
+              }
           }
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
@@ -213,8 +224,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   }
               }
               if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
-            
-              monkeyList[i].update();
+                monkeyList[i].update();
               }
 
           static Timer timer(5000);

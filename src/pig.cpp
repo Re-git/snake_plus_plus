@@ -1,8 +1,7 @@
 #include "pig.h"
 #include <iostream>
 
-Pig::Pig(Texture2D monkeySprite)
-{
+Pig::Pig(Texture2D monkeySprite) {
     sprite = monkeySprite;
     position = createPosition();
     velocity = Vector2{ 0,0 };
@@ -15,15 +14,13 @@ Pig::Pig(Texture2D monkeySprite)
     frozen = 0;
 }
 
-void Pig::draw()
-{
-    monkeyRec = { position.x,position.y,width, height };
+void Pig::draw() {
+    pigRec = { position.x,position.y,width, height };
     DrawTexturePro(sprite, { 0.0f, 0.0f, (float)sprite.width, (float)sprite.height },
-        monkeyRec, { 0.0f, 0.0f }, 0.0f, (frozen == 0) ? WHITE : SKYBLUE);
+        pigRec, { 0.0f, 0.0f }, 0.0f, (frozen == 0) ? WHITE : SKYBLUE);
 }
 
-void Pig::update()
-{
+void Pig::update() {
     // Update velocity
     velocity = Vector2Add(velocity, acceleration);
     // Limit speed
@@ -75,9 +72,8 @@ Vector2 Pig::seek(Vector2 target) {
     limit(steer, maxSeekForce);
 
     return steer;
-
-Vector2 Pig::createPosition()
-{
+}
+Vector2 Pig::createPosition() {
     Vector2 vec;
     int roll = GetRandomValue(1, 4);
     switch (roll)

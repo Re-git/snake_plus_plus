@@ -18,7 +18,7 @@ class Pig {
         float maxSeekForce;
         int dead;
         int frozen;
-        Rectangle monkeyRec;
+        Rectangle pigRec;
         Texture2D sprite;
 
         Pig(Texture2D pigSprite);
