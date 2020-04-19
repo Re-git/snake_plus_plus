@@ -28,6 +28,7 @@ int main(void){
   float wkurwiacz = 1.5;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenuState;
+  int pigToken = 0;
   
   static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
@@ -48,7 +49,7 @@ int main(void){
   // LOAD TEXTURES
 Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
 Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/malpa_angry.png");
-Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/pig_angry.png");
+Texture2D pigSprite = LoadTexture("assets/sprites/enemies/pig_angry.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
@@ -172,10 +173,10 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           monkeyList[i].dead = 1;
         }
         if (CheckCollisionCircleRec(explosions[i].position, explosions[i].explosionSize, pigList[i].pigRec)) {
-            pigList.remove();
+            pigToken = 0;
+            pigList.clear();
         }
       }
-      
 
       for (size_t i=0; i<monkeyList.size(); i++)  
       {
@@ -208,11 +209,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   monkeyList[i].frozen = 1;
                   monkeyList[i].maxspeed = 0;
               }
-              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize, pigList[i].pigRec))
-              {
-                  pigList[i].frozen = 1;
-                  pigList[i].maxspeed = 0;
-              }
           }
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
@@ -225,7 +221,19 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
               }
               if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
                 monkeyList[i].update();
+            }
+          for (size_t i = 0; i < pigList.size(); i++) {
+              if (monkeyList[i].frozen) {
+                  static Timer pigfrozenTimer(5000);
+                  if (pigfrozenTimer.isReady()) {
+                      pigList[i].maxspeed = 1.5;   // freez monkeys
+                      pigfrozenTimer.reset();
+                      pigList[i].frozen = 0;
+                  }
               }
+              if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
+              pigList[i].update();
+          }
 
           static Timer timer(5000);
           if (timer.isReady()) {
@@ -235,11 +243,20 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
               }
               timer.reset();
           }
+          static Timer pig_timer(5000);
+          if (pig_timer.isReady() && pigToken!=1) {
+              pigList.push_back(Pig(pigSprite));
+              if (pig_timer.getLimit() > 200) {
+                  pig_timer.setLimit(pig_timer.getLimit() - 1);
+              }
+              pig_timer.reset();
+              pigToken = 1;
+          }
 
           snake.handleInput();
           snake.update();
           snake.draw();
-          fruit.draw(snake, points);
+          fruit.draw(snake, pigList, points);
           nuke.draw();
           frostNuke.draw();
           for (size_t i = 0; i < explosions.size(); i++) {
@@ -276,6 +293,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     case deathScreenState:
       StopMusicStream(IGS);
       monkeyList.clear();
+      pigList.clear();
       snake = Snake(snakeSprite, 15);
       
       fruit.moveFruit();
@@ -296,6 +314,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         czas_trudnosci.reset();
         wkurwiacz = 1.5;
         points = 0;
+        pigToken = 0;
         frameCounter = 0;
         rodzaj = 0;
         }

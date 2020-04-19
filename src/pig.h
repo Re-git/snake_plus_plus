@@ -8,6 +8,7 @@
 #include <vector>
 
 
+
 class Pig {
     public:
         Vector2 position;
@@ -26,7 +27,8 @@ class Pig {
         void update();
         void limit(Vector2&, float);
         void applyForce(Vector2);
-        void applyBehaviors(std::vector<Malpa>&, Vector2);
+        void applyBehaviors(std::vector<Pig>&, Vector2);
+        bool collide(Rectangle rec);
         Vector2 createPosition();
         Vector2 seek(Vector2);
 };

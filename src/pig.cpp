@@ -30,10 +30,14 @@ void Pig::update() {
     acceleration = Vector2Scale(acceleration, 0);
     draw();
     maxspeed += 0.001;
-    if (separationRange > 60)
-    {
-        separationRange -= 0.1;
+}
+bool Pig::collide(Rectangle rec) {
+    if (CheckCollisionRecs(pigRec, rec)) {
+        return true;
     }
+    else {
+        return false;
+    }    
 }
 
 
@@ -51,11 +55,8 @@ void Pig::limit(Vector2& v, float num)
 }
 
 void Pig::applyBehaviors(std::vector<Pig>& malpy, Vector2 owocPosition) {
-    Vector2 separateForce = separate(malpy);
     Vector2 seekForce = seek(owocPosition);
-    separateForce = Vector2Scale(separateForce, 2);
     seekForce = Vector2Scale(seekForce, 1);
-    applyForce(separateForce);
     applyForce(seekForce);
 }
 
