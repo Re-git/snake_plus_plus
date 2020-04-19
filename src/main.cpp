@@ -23,7 +23,7 @@ int main(void){
   float screenWidth = 1420;
   float screenHeight = 1000;
   float wkurwiacz = 1.5;
-  Area gameArea = {40, 80, 40, 80};
+  Area gameArea = {45, 85, 45, 85};
   gameState = mainMenuState;
   
   // static Timer nieuzyte(10000);         // nieużyty timer nieużyte >.<
