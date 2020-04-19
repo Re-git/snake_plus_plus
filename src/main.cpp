@@ -57,7 +57,7 @@ Texture2D groundTiles[10] = {LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
-Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericItem_color_089.png"),LoadTexture("assets/sprites/powerups/genericItem_color_090.png")};
+Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.png"),LoadTexture("assets/sprites/powerups/bluepill2.png")};
 
   // LOAD SOUNDS
   InitAudioDevice();
@@ -272,6 +272,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/genericIte
     UnloadTexture(groundTiles[8]);
     UnloadTexture(groundTiles[9]);
     UnloadTexture(fenceSprite);
+    UnloadTexture(bulletTimeSprite[0]);
+    UnloadTexture(bulletTimeSprite[1]);
     UnloadTexture(fenceSprite_side);
     UnloadTexture(fenceSprite_side_rotated);
     UnloadImage(ikona);
