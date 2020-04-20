@@ -241,6 +241,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
         gameState = (gameState==inGameState) ? inGameState : mainMenuState;
         czas_punktowy.reset();
         czas_trudnosci.reset();
+        bullet.penaltyTimer->reset();
         wkurwiacz = 1.5;
         points = 0;
         frameCounter = 0;
