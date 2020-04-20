@@ -24,7 +24,7 @@ void Bullet::draw(Snake& snake, int& points)
         N=1;
         moveBulletTime();
         points-=5;
-        SetTargetFPS((20));
+        SetTargetFPS(30);
         podniesiony = true;   
     }
 
