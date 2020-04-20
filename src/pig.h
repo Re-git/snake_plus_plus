@@ -21,6 +21,7 @@ class Pig {
         int frozen;
         Rectangle pigRec;
         Texture2D sprite;
+        float iloscZjedzonych;
 
         Pig(Texture2D pigSprite);
         void draw();

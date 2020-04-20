@@ -1,6 +1,5 @@
 #include "Fruits.h"
 
-
 Fruit::Fruit(Texture2D fruitSprite, Area gameArea) {
     respawnTimer = new Timer{10000};
     sprite = fruitSprite;
@@ -36,6 +35,8 @@ void Fruit::draw(Snake& snake, std::vector<Pig>& pigList,  int& points)
         }
     if (!pigList.empty()) {
         if (pigList[0].collide(collisionMask)) {
+            pigList[0].iloscZjedzonych+=5;
+            points-=5;
             moveFruit();
             respawnTimer->reset();
         }

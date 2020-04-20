@@ -30,7 +30,8 @@ int main(void){
   gameState = mainMenuState;
   int pigToken = 0;
   
-  static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
+  static Timer frozenTimer(5000);
+  // static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -193,12 +194,14 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           wkurwiacz+=0.0015;
         }
         monkeyList[i].maxspeed = wkurwiacz;
+        pigList[i].maxspeed = wkurwiacz-0.5;
 
-        if (snake.collide(monkeyList[i].monkeyRec)) 
+        if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[i].pigRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
           monkeyList[i].maxspeed = 1.5;
+          pigList[i].maxspeed = 1;
         }
       }
 
@@ -212,7 +215,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           }
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
-                  static Timer frozenTimer(5000);
                   if(frozenTimer.isReady()) {
                       monkeyList[i].maxspeed = 1.5;   // freez monkeys
                       frozenTimer.reset();
@@ -222,12 +224,21 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
               if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
                 monkeyList[i].update();
             }
+
+          for (size_t i = 0; i < frostExplosion.size() && i < pigList.size(); i++) { // Check if pigs are hit by frostExplosion
+              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
+                                          pigList[i].pigRec)) 
+              {
+                  pigList[i].frozen = 1;
+                  pigList[i].maxspeed = 0;
+              }
+          }
+
           for (size_t i = 0; i < pigList.size(); i++) {
-              if (monkeyList[i].frozen) {
-                  static Timer pigfrozenTimer(5000);
-                  if (pigfrozenTimer.isReady()) {
-                      pigList[i].maxspeed = 1.5;   // freez monkeys
-                      pigfrozenTimer.reset();
+              if (pigList[i].frozen) {
+                  if (frozenTimer.isReady()) {
+                      pigList[i].maxspeed = 1;   // freez pigs
+                      frozenTimer.reset();
                       pigList[i].frozen = 0;
                   }
               }
@@ -327,10 +338,17 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     UnloadTexture(monkeySprite);
     UnloadTexture(fruitSprite);
     UnloadTexture(nukeSprite);
+    UnloadTexture(pigSprite);
+    UnloadTexture(frostNukeSprite);
     UnloadTexture(explosionSprites[1]);
     UnloadTexture(explosionSprites[2]);
     UnloadTexture(explosionSprites[3]);
     UnloadTexture(explosionSprites[4]);
+    UnloadTexture(frostExplosionSprites[0]);
+    UnloadTexture(frostExplosionSprites[1]);
+    UnloadTexture(frostExplosionSprites[2]);
+    UnloadTexture(frostExplosionSprites[3]);
+    UnloadTexture(frostExplosionSprites[4]);
     UnloadTexture(groundTiles[0]);
     UnloadTexture(groundTiles[1]);
     UnloadTexture(groundTiles[2]);

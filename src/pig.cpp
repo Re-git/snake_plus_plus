@@ -8,15 +8,16 @@ Pig::Pig(Texture2D monkeySprite) {
     acceleration = Vector2{ 0,0 };
     width = 50;
     height = 50;           
-    maxspeed = 1.5;                       // max prêdkoœæ danej ma³pki
-    maxSeekForce = 0.055;               // si³a z jak¹ ma³pki zmieniaj¹ swoj¹ trajektorie ¿eby pod¹¿aæ za graczem
+    maxspeed = 1;
+    maxSeekForce = 0.055;          
     dead = 0;
     frozen = 0;
+    iloscZjedzonych = 0;
 }
 
 void Pig::draw() {
-    pigRec = { position.x,position.y,width, height };
-    DrawTexturePro(sprite, { 0.0f, 0.0f, (float)sprite.width, (float)sprite.height },
+    pigRec = { position.x,position.y,width+iloscZjedzonych, height+iloscZjedzonych};
+    DrawTexturePro(sprite, { 0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
         pigRec, { 0.0f, 0.0f }, 0.0f, (frozen == 0) ? WHITE : SKYBLUE);
 }
 
