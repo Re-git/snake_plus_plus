@@ -51,6 +51,7 @@ void Bullet::draw(Snake& snake, int& points)
         points-=5;
         SetTargetFPS(60);
         podniesiony = false;
+        penaltyValue = 0;
     }
     
     pulse(40.0,60.0);
