@@ -3,12 +3,19 @@
 Bullet::Bullet(Texture2D BulletTimeSprite[2], Area gameArea) {
     sprite[0] = BulletTimeSprite[0];
     sprite[1] = BulletTimeSprite[1];
-    BulletTimeSize = 35;
+    BulletTimeSize = 25;
     spawnArea = gameArea;
     growing = 0.5;
     N = 0;
     podniesiony = false;
+    penaltyValue = 0;
+    penaltyTimer = new Timer{20000};
     moveBulletTime();
+}
+
+Bullet::~Bullet()
+{
+    delete penaltyTimer;
 }
 
 void Bullet::moveBulletTime() {
@@ -25,8 +32,17 @@ void Bullet::draw(Snake& snake, int& points)
         moveBulletTime();
         points-=5;
         SetTargetFPS(30);
-        podniesiony = true;   
+        podniesiony = true;       
     }
+
+    if(podniesiony == true)
+        if(penaltyTimer->isReady())
+        {
+        penaltyValue += 10;
+        points-=penaltyValue;
+        penaltyTimer->reset();
+        }
+
 
     if(snake.collide(collisionMask) && podniesiony == true)
     {

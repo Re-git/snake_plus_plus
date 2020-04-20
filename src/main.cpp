@@ -176,6 +176,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
           bullet.N = 0;
           bullet.podniesiony = 0;
           monkeyList[i].maxspeed = 1.5;
+          bullet.penaltyValue = 0;
         }
       }
 
@@ -246,6 +247,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
         rodzaj = 0;
         bullet.N = 0;
         bullet.podniesiony = 0;
+        bullet.penaltyValue = 0;
         SetTargetFPS(60);
         }
     break;
