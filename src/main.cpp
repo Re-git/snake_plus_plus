@@ -169,13 +169,15 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       {PlaySoundMulti(BCS);}
 
 
-      for (size_t i = 0; i < explosions.size() && i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
-        if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
+      for(size_t i = 0;  i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
+        for (size_t j = 0; j < explosions.size(); j++){
           monkeyList[i].dead = 1;
-        }
-        if (CheckCollisionCircleRec(explosions[i].position, explosions[i].explosionSize, pigList[i].pigRec)) {
+        if(CheckCollisionCircleRec(explosions[j].position,explosions[j].explosionSize,monkeyList[i].monkeyRec))
+        {
+        
             pigToken = 0;
             pigList.clear();
+        }
         }
       }
 
@@ -205,8 +207,9 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         }
       }
 
-          for (size_t i = 0; i < frostExplosion.size() && i < monkeyList.size(); i++) { // Check if monkeys are hit by frostExplosion
-              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
+          for (size_t i = 0; i < monkeyList.size(); i++) {
+            for(size_t j = 0; j < frostExplosion.size(); j++)
+              if (CheckCollisionCircleRec(frostExplosion[j].position, frostExplosion[j].frostExplosionSize,
                                           monkeyList[i].monkeyRec)) 
               {
                   monkeyList[i].frozen = 1;
