@@ -228,8 +228,9 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                 monkeyList[i].update();
             }
 
-          for (size_t i = 0; i < frostExplosion.size() && i < pigList.size(); i++) { // Check if pigs are hit by frostExplosion
-              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
+          for (size_t i = 0; i < pigList.size(); i++) { // Check if pigs are hit by frostExplosion
+            for(size_t j = 0; j < frostExplosion.size(); j++){
+              if (CheckCollisionCircleRec(frostExplosion[j].position, frostExplosion[j].frostExplosionSize,
                                           pigList[i].pigRec)) 
               {
                   pigList[i].frozen = 1;
