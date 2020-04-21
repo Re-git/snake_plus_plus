@@ -237,6 +237,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   pigList[i].maxspeed = 0;
               }
           }
+          }
 
           for (size_t i = 0; i < pigList.size(); i++) {
               if (pigList[i].frozen) {
