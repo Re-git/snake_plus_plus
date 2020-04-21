@@ -171,9 +171,9 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
 
       for(size_t i = 0;  i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
         for (size_t j = 0; j < explosions.size(); j++){
-          monkeyList[i].dead = 1;
         if(CheckCollisionCircleRec(explosions[j].position,explosions[j].explosionSize,monkeyList[i].monkeyRec))
         {
+          monkeyList[i].dead = 1;
         
             pigToken = 0;
             pigList.clear();
