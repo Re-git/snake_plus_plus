@@ -3,7 +3,7 @@
 Bullet::Bullet(Texture2D BulletTimeSprite[2], Area gameArea) {
     sprite[0] = BulletTimeSprite[0];
     sprite[1] = BulletTimeSprite[1];
-    BulletTimeSize = 25;
+    BulletTimeSize = 35;
     spawnArea = gameArea;
     growing = 0.5;
     N = 0;
@@ -36,13 +36,15 @@ void Bullet::draw(Snake& snake, int& points)
     }
 
     if(podniesiony == true)
+    {
         if(penaltyTimer->isReady())
         {
-        penaltyValue += 10;
+            if(penaltyTimer)
+        penaltyValue += 25;
         points-=penaltyValue;
         penaltyTimer->reset();
         }
-
+    }
 
     if(snake.collide(collisionMask) && podniesiony == true)
     {

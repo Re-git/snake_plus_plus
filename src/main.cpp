@@ -144,8 +144,9 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
       if(snake.checkCollisionWithEdges(snake.position,BCS)==true) {PlaySoundMulti(BCS);}
 
 
-      for (size_t i = 0; i < explosions.size() && i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
-        if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
+       for(size_t i = 0;  i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
+        for (size_t j = 0; j < explosions.size(); j++)
+        if(CheckCollisionCircleRec(explosions[j].position,explosions[j].explosionSize,monkeyList[i].monkeyRec)){
           monkeyList[i].dead = 1;
         }
       }
@@ -167,6 +168,13 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
           aktualny_poziom+=100;
           wkurwiacz+=0.0015;
         }
+
+        if(points<99)
+        {
+          aktualny_poziom = 0;
+          wkurwiacz = 1.5;
+        }
+
         monkeyList[i].maxspeed = wkurwiacz;
 
         if (snake.collide(monkeyList[i].monkeyRec)) 
