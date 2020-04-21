@@ -335,6 +335,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         gameState = (gameState==inGameState) ? inGameState : mainMenuState;
         czas_punktowy.reset();
         czas_trudnosci.reset();
+        pig_timer.reset();
         wkurwiacz = 1.5;
         points = 0;
         pigToken = 0;
