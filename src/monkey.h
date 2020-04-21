@@ -20,6 +20,7 @@ public:
     float maxSeparationForce; // siła odpychania się między małpkami
     float maxSeekForce;
     int dead;
+    int frozen;
     Rectangle monkeyRec;
     Texture2D sprite;
 

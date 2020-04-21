@@ -1,5 +1,5 @@
-#ifndef FRUITS_H
-#define FRUITS_H
+#ifndef SNAKE_PLUS_PLUS_FROSTNUKE_H
+#define SNAKE_PLUS_PLUS_FROSTNUKE_H
 
 #include "libs/raylib.h"
 #include "libs/raymath.h"
@@ -8,24 +8,26 @@
 #include "utility.h"
 #include "timer.h"
 #include "snake.h"
-#include "pig.h"
+#include "monkey.h"
+#include "FrostExplosion.h"
 
 
-class Fruit {
+class FrostNuke {
 public:
     Texture2D sprite;
     Area spawnArea;
-    float fruitSize;
+    float frostNukeSize;
     float growing;
     Timer* respawnTimer;
     Rectangle collisionMask;
     Vector2 position;
-    Fruit(Texture2D fruitSprite ,Area gameArea);
-    ~Fruit();
-    void moveFruit();
-    void draw(Snake& snake, std::vector<Pig>& pigList, int& points);
+    FrostNuke(Texture2D frostNukeSprite, Area gameArea);
+    ~FrostNuke();
+    void moveFrostNuke();
+    void draw();
     void pulse(float, float);
 };
+
 
 
 #endif

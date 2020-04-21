@@ -31,6 +31,7 @@ void Timer::setLimit(int time_limit)
 {
     timeLimit = time_limit;
 }
+
 unsigned int Timer::getLimit()
 {
     return timeLimit;
