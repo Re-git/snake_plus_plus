@@ -202,14 +202,14 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           wkurwiacz+=0.0015;
         }
         monkeyList[i].maxspeed = wkurwiacz;
-        pigList[i].maxspeed = wkurwiacz-0.5;
+        pigList[j].maxspeed = wkurwiacz-0.5;
 
         if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[j].pigRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
           monkeyList[i].maxspeed = 1.5;
-          pigList[i].maxspeed = 1;
+          pigList[j].maxspeed = 1;
         }
       }
       }
