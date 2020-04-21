@@ -17,6 +17,7 @@
 #include "Explosion.h"
 #include "FrostExplosion.h"
 #include "FrostNuke.h"
+#include "pig.h"
 
 GameState gameState;
 
@@ -27,8 +28,10 @@ int main(void){
   float wkurwiacz = 1.5;
   Area gameArea = {40, 80, 40, 80};
   gameState = mainMenuState;
+  int pigToken = 0;
   
-  static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
+  static Timer frozenTimer(5000);
+  // static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -47,6 +50,7 @@ int main(void){
   // LOAD TEXTURES
 Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
 Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/malpa_angry.png");
+Texture2D pigSprite = LoadTexture("assets/sprites/enemies/pig_angry.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
@@ -82,6 +86,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   // CREATE GAME OBJECTS
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
+  std::vector<Pig> pigList;
   std::vector<Explosion> explosions;
   std::vector<FrostExplosion> frostExplosion;
   FrostNuke frostNuke(frostNukeSprite, gameArea);
@@ -164,14 +169,25 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       {PlaySoundMulti(BCS);}
 
 
-      for (size_t i = 0; i < explosions.size() && i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
-        if(CheckCollisionCircleRec(explosions[i].position,explosions[i].explosionSize,monkeyList[i].monkeyRec)){
+      for(size_t i = 0;  i < monkeyList.size(); i++){ // Check if monkeys are hit by explosion
+        for (size_t j = 0; j < explosions.size(); j++){
+          for(size_t k = 0; k < pigList.size(); k++){
+        if(CheckCollisionCircleRec(explosions[j].position,explosions[j].explosionSize,monkeyList[i].monkeyRec))
+        {
           monkeyList[i].dead = 1;
         }
+        if(CheckCollisionCircleRec(explosions[j].position,explosions[j].explosionSize,pigList[k].pigRec))
+        {
+            pigToken = 0;
+            pigList.clear();
+        }
       }
-      
+      }
+      }
 
       for (size_t i=0; i<monkeyList.size(); i++)  
+        for(size_t j = 0; j<pigList.size(); j++)
+        {
       {
         if (monkeyList[i].dead) 
         {
@@ -186,17 +202,21 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           wkurwiacz+=0.0015;
         }
         monkeyList[i].maxspeed = wkurwiacz;
+        pigList[j].maxspeed = wkurwiacz-0.5;
 
-        if (snake.collide(monkeyList[i].monkeyRec)) 
+        if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[j].pigRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
           monkeyList[i].maxspeed = 1.5;
+          pigList[j].maxspeed = 1;
         }
       }
+      }
 
-          for (size_t i = 0; i < frostExplosion.size() && i < monkeyList.size(); i++) { // Check if monkeys are hit by frostExplosion
-              if (CheckCollisionCircleRec(frostExplosion[i].position, frostExplosion[i].frostExplosionSize,
+          for (size_t i = 0; i < monkeyList.size(); i++) {
+            for(size_t j = 0; j < frostExplosion.size(); j++)
+              if (CheckCollisionCircleRec(frostExplosion[j].position, frostExplosion[j].frostExplosionSize,
                                           monkeyList[i].monkeyRec)) 
               {
                   monkeyList[i].frozen = 1;
@@ -205,7 +225,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           }
           for (size_t i = 0; i < monkeyList.size(); i++) {
               if (monkeyList[i].frozen) {
-                  static Timer frozenTimer(5000);
                   if(frozenTimer.isReady()) {
                       monkeyList[i].maxspeed = 1.5;   // freez monkeys
                       frozenTimer.reset();
@@ -213,9 +232,31 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
                   }
               }
               if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
-            
-              monkeyList[i].update();
+                monkeyList[i].update();
+            }
+
+          for (size_t i = 0; i < pigList.size(); i++) { // Check if pigs are hit by frostExplosion
+            for(size_t j = 0; j < frostExplosion.size(); j++){
+              if (CheckCollisionCircleRec(frostExplosion[j].position, frostExplosion[j].frostExplosionSize,
+                                          pigList[i].pigRec)) 
+              {
+                  pigList[i].frozen = 1;
+                  pigList[i].maxspeed = 0;
               }
+          }
+          }
+
+          for (size_t i = 0; i < pigList.size(); i++) {
+              if (pigList[i].frozen) {
+                  if (frozenTimer.isReady()) {
+                      pigList[i].maxspeed = 1;   // freez pigs
+                      frozenTimer.reset();
+                      pigList[i].frozen = 0;
+                  }
+              }
+              if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
+              pigList[i].update();
+          }
 
           static Timer timer(5000);
           if (timer.isReady()) {
@@ -225,11 +266,20 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
               }
               timer.reset();
           }
+          static Timer pig_timer(5000);
+          if (pig_timer.isReady() && pigToken!=1) {
+              pigList.push_back(Pig(pigSprite));
+              if (pig_timer.getLimit() > 200) {
+                  pig_timer.setLimit(pig_timer.getLimit() - 1);
+              }
+              pig_timer.reset();
+              pigToken = 1;
+          }
 
           snake.handleInput();
           snake.update();
           snake.draw();
-          fruit.draw(snake, points);
+          fruit.draw(snake, pigList, points);
           nuke.draw();
           frostNuke.draw();
           for (size_t i = 0; i < explosions.size(); i++) {
@@ -266,6 +316,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     case deathScreenState:
       StopMusicStream(IGS);
       monkeyList.clear();
+      pigList.clear();
       snake = Snake(snakeSprite, 15);
       
       fruit.moveFruit();
@@ -284,8 +335,10 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         gameState = (gameState==inGameState) ? inGameState : mainMenuState;
         czas_punktowy.reset();
         czas_trudnosci.reset();
+        pig_timer.reset();
         wkurwiacz = 1.5;
         points = 0;
+        pigToken = 0;
         frameCounter = 0;
         rodzaj = 0;
         }
@@ -298,10 +351,17 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     UnloadTexture(monkeySprite);
     UnloadTexture(fruitSprite);
     UnloadTexture(nukeSprite);
+    UnloadTexture(pigSprite);
+    UnloadTexture(frostNukeSprite);
     UnloadTexture(explosionSprites[1]);
     UnloadTexture(explosionSprites[2]);
     UnloadTexture(explosionSprites[3]);
     UnloadTexture(explosionSprites[4]);
+    UnloadTexture(frostExplosionSprites[0]);
+    UnloadTexture(frostExplosionSprites[1]);
+    UnloadTexture(frostExplosionSprites[2]);
+    UnloadTexture(frostExplosionSprites[3]);
+    UnloadTexture(frostExplosionSprites[4]);
     UnloadTexture(groundTiles[0]);
     UnloadTexture(groundTiles[1]);
     UnloadTexture(groundTiles[2]);

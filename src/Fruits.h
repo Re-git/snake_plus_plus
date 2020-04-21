@@ -8,6 +8,7 @@
 #include "utility.h"
 #include "timer.h"
 #include "snake.h"
+#include "pig.h"
 
 
 class Fruit {
@@ -22,7 +23,7 @@ public:
     Fruit(Texture2D fruitSprite ,Area gameArea);
     ~Fruit();
     void moveFruit();
-    void draw(Snake& snake, int& points);
+    void draw(Snake& snake, std::vector<Pig>& pigList, int& points);
     void pulse(float, float);
 };
 
