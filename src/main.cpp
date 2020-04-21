@@ -15,6 +15,7 @@
 #include "Fruits.h"
 #include "Nukes.h"
 #include "Explosion.h"
+#include "BulletTime.h"
 #include "FrostExplosion.h"
 #include "FrostNuke.h"
 #include "pig.h"
@@ -26,12 +27,12 @@ int main(void){
   float screenWidth = 1420;
   float screenHeight = 1000;
   float wkurwiacz = 1.5;
-  Area gameArea = {40, 80, 40, 80};
+  Area gameArea = {45, 85, 45, 85};
   gameState = mainMenuState;
   int pigToken = 0;
-  
+ 
+  // static Timer nieuzyte(10000);         // nieużyty timer nieużyte >.<
   static Timer frozenTimer(5000);
-  // static Timer nieuzyte(10000);         // EXPLOSION explosion *explosion*
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -72,6 +73,7 @@ Texture2D groundTiles[10] = {LoadTexture("assets/sprites/tiles/Ground_Tile_01_B.
 Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
+Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.png"),LoadTexture("assets/sprites/powerups/bluepill2.png")};
 
   // LOAD SOUNDS
   InitAudioDevice();
@@ -91,6 +93,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   std::vector<FrostExplosion> frostExplosion;
   FrostNuke frostNuke(frostNukeSprite, gameArea);
   Fruit fruit(fruitSprite, gameArea);
+  Bullet bullet(bulletTimeSprite, gameArea);
   Nuke nuke(nukeSprite, gameArea);
   Gui gui;
 
@@ -99,7 +102,6 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
-
     switch (gameState)
     {
     // IN GAME STATE
@@ -112,7 +114,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       }
       frameCounter++;
       if (snake.collide(nuke.collisionMask)){
-          explosions.push_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
+          explosions.emplace_back(Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
           // std::cout << "num of explosions" <<  explosions.size() << std::endl;
           points = points + monkeyList.size();
           nuke.moveNuke();
@@ -201,6 +203,13 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
           aktualny_poziom+=100;
           wkurwiacz+=0.0015;
         }
+
+        if(points<99)
+        {
+          aktualny_poziom = 0;
+          wkurwiacz = 1.5;
+        }
+
         monkeyList[i].maxspeed = wkurwiacz;
         pigList[j].maxspeed = wkurwiacz-0.5;
 
@@ -208,12 +217,13 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
+          bullet.N = 0;
+          bullet.podniesiony = 0;
           monkeyList[i].maxspeed = 1.5;
+          bullet.penaltyValue = 0;
           pigList[j].maxspeed = 1;
         }
       }
-      }
-
           for (size_t i = 0; i < monkeyList.size(); i++) {
             for(size_t j = 0; j < frostExplosion.size(); j++)
               if (CheckCollisionCircleRec(frostExplosion[j].position, frostExplosion[j].frostExplosionSize,
@@ -312,14 +322,14 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         break;
     
     // DEATH SCREEN STATE
-
     case deathScreenState:
       StopMusicStream(IGS);
       monkeyList.clear();
       pigList.clear();
       snake = Snake(snakeSprite, 15);
-      
+      SetTargetFPS(60);
       fruit.moveFruit();
+      bullet.moveBulletTime();
       nuke.moveNuke();   
       frostNuke.moveFrostNuke();
       gui.drawDeathMenu(points, frameCounter, gameState);
@@ -335,12 +345,17 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         gameState = (gameState==inGameState) ? inGameState : mainMenuState;
         czas_punktowy.reset();
         czas_trudnosci.reset();
+        bullet.penaltyTimer->reset();
         pig_timer.reset();
         wkurwiacz = 1.5;
         points = 0;
         pigToken = 0;
         frameCounter = 0;
         rodzaj = 0;
+        bullet.N = 0;
+        bullet.podniesiony = 0;
+        bullet.penaltyValue = 0;
+        SetTargetFPS(60);
         }
     break;
 
@@ -373,6 +388,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     UnloadTexture(groundTiles[8]);
     UnloadTexture(groundTiles[9]);
     UnloadTexture(fenceSprite);
+    UnloadTexture(bulletTimeSprite[0]);
+    UnloadTexture(bulletTimeSprite[1]);
     UnloadTexture(fenceSprite_side);
     UnloadTexture(fenceSprite_side_rotated);
     UnloadImage(ikona);
