@@ -39,7 +39,6 @@ void Bullet::draw(Snake& snake, int& points)
     {
         if(penaltyTimer->isReady())
         {
-            if(penaltyTimer)
         penaltyValue += 25;
         points-=penaltyValue;
         penaltyTimer->reset();
