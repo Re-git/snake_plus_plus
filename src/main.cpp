@@ -186,6 +186,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
       }
 
       for (size_t i=0; i<monkeyList.size(); i++)  
+        for(size_t j = 0; j<pigList.size(); j++)
+        {
       {
         if (monkeyList[i].dead) 
         {
@@ -202,13 +204,14 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
         monkeyList[i].maxspeed = wkurwiacz;
         pigList[i].maxspeed = wkurwiacz-0.5;
 
-        if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[i].pigRec)) 
+        if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[j].pigRec)) 
         {
           gameState = deathScreenState;
           PlaySound(GameOver);
           monkeyList[i].maxspeed = 1.5;
           pigList[i].maxspeed = 1;
         }
+      }
       }
 
           for (size_t i = 0; i < monkeyList.size(); i++) {
