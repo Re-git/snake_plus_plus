@@ -224,8 +224,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           if (monkeyList[i].frozen) {
                               if (frozenTimer.isReady()) {
                                   monkeyList[i].maxspeed = 1.5;   // freez monkeys
-                                  frozenTimer.reset();
                                   monkeyList[i].frozen = 0;
+                                 if(i==monkeyList.size()-1) frozenTimer.reset();
                               }
                           }
                           if (monkeyList[i].frozen != 1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
@@ -247,8 +247,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           if (pigList[i].frozen) {
                               if (frozenTimer.isReady()) {
                                   pigList[i].maxspeed = 1;   // freez pigs
-                                  frozenTimer.reset();
                                   pigList[i].frozen = 0;
+                                if(i==pigList.size()-1) frozenTimer.reset();
                               }
                           }
                           if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
