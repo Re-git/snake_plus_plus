@@ -33,6 +33,7 @@ int main(void){
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
   static int ilosc_malpeczek = 0;
+  static Timer frozenTimer(5000);
   frameCounter = 1682030;
 
   // CREATE WINDOW
@@ -82,7 +83,7 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
   srand(time(NULL));
 
   // CREATE GAME OBJECTS
-  Snake snake(snakeSprite, 15);
+  Snake snake(snakeSprite, 25);
   std::vector<Malpa> monkeyList;
   std::vector<Explosion> explosions;
   std::vector<FrostExplosion> frostExplosion;
@@ -215,20 +216,17 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
               }
           }
           for (size_t i = 0; i < monkeyList.size(); i++) {
-              if (monkeyList[i].frozen) {
-                  static Timer frozenTimer(5000);
+              if (monkeyList[i].frozen) { 
                   if(frozenTimer.isReady()) {
                       monkeyList[i].maxspeed = 1.5;   // freez monkeys
-                      frozenTimer.reset();
                       monkeyList[i].frozen = 0;
+                      if(i==monkeyList.size()-1) frozenTimer.reset();
                   }
               }
-              if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
             
+              if(monkeyList[i].frozen!=1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
               monkeyList[i].update();
               }
-
-            
 
             if(ilosc_malpeczek!=200)
             {
@@ -281,7 +279,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
     case deathScreenState:
       StopMusicStream(IGS);
       monkeyList.clear();
-      snake = Snake(snakeSprite, 15);
+      ilosc_malpeczek = 0;
+      snake = Snake(snakeSprite, 45);
       
       fruit.moveFruit();
       nuke.moveNuke();   
@@ -301,8 +300,8 @@ Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poz
 
         czas_trudnosci.reset();
         wkurwiacz = 1.5;
-        points = 0;
-        frameCounter = 0;
+        // points = 0;
+        // frameCounter = 0;
         rodzaj = 0;
         }
     break;

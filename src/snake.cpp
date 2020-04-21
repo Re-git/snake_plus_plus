@@ -7,11 +7,11 @@ Snake::Snake(Texture2D snakeSprite ,int length)
     headHeight = 30;
     headWidth = 30; 
     bodyHeight = 10;
-    bodyWidth = 10; 
+    bodyWidth = 30; 
     position.x = 60.0f;
     position.y = GetScreenHeight() / static_cast<float>(2.0);
     velocity = Vector2{4,0};
-    maxSpeed = 1.5;
+    maxSpeed = 2;
     turnRate = 0.2;
     speedModifier = 0;
     angle=0;
