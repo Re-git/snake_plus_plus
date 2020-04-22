@@ -8,7 +8,7 @@ FrostExplosion::FrostExplosion(Texture2D sprite[5],float x, float y, size_t tail
     sprites[4] = sprite[4];
     position.x = x;
     position.y = y;
-    frostExplosionSize = tailSize * 8;
+    frostExplosionSize = tailSize + 250;
     frame = 0;
     finished = 0;
 }

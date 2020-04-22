@@ -78,9 +78,9 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
   // LOAD SOUNDS
   InitAudioDevice();
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
-  Music IGS = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
+  Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
   Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
-  SetMusicVolume(IGS, 0.1);
+  SetMusicVolume(IGS, 0.2);
 
   // RANDOM NUMBERS
   srand(time(NULL));
@@ -255,7 +255,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           pigList[i].update();
                       }
 
-                      static Timer timer(5000);
+                      static Timer timer(4000);
                       if (timer.isReady()) {
                           monkeyList.push_back(Malpa(monkeySprite));
                           if (timer.getLimit() > 200) {

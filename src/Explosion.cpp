@@ -10,7 +10,7 @@ Explosion::Explosion(Texture2D sprite[5],float x, float y, size_t tailSize) {
     sprites[4] = sprite[4];
     position.x = x;
     position.y = y;
-    explosionSize = tailSize * 8;
+    explosionSize = tailSize + 150;
     frame = 0;
     finished = 0;
 }
