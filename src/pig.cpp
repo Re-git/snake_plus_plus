@@ -30,7 +30,7 @@ void Pig::update() {
     // Reset accelertion to 0 each cycle
     acceleration = Vector2Scale(acceleration, 0);
     draw();
-    maxspeed += 0.001;
+    // maxspeed += 0.001;
 }
 bool Pig::collide(Rectangle rec) {
     if (CheckCollisionRecs(pigRec, rec)) {
