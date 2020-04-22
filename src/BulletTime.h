@@ -17,14 +17,16 @@ public:
     float BulletTimeSize;
     float growing;
     Timer* penaltyTimer;
+    Timer* outsideTimer;
     int penaltyValue;
     Rectangle collisionMask;
     Vector2 position;
-    bool podniesiony;
+    bool podniesiony, outside;
     int N;
     Bullet(Texture2D BulletTimeSprite[2] ,Area gameArea);
     ~Bullet();
     void moveBulletTime();
+    void moveBulletTimeOutside();
     void draw(Snake& snake, int& points);
     void pulse(float, float);
 };

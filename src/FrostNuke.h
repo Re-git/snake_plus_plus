@@ -18,12 +18,15 @@ public:
     Area spawnArea;
     float frostNukeSize;
     float growing;
+    bool outside;
     Timer* respawnTimer;
+    Timer* outsideTimer;
     Rectangle collisionMask;
     Vector2 position;
     FrostNuke(Texture2D frostNukeSprite, Area gameArea);
     ~FrostNuke();
     void moveFrostNuke();
+    void moveFrostNukeOutside();
     void draw();
     void pulse(float, float);
 };

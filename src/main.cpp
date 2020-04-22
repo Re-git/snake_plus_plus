@@ -115,7 +115,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           Explosion(explosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
                   // std::cout << "num of explosions" <<  explosions.size() << std::endl;
                   points = points + monkeyList.size();
-                  nuke.moveNuke();
+                  nuke.moveNukeOutside();
+                  nuke.outsideTimer->reset();
                   nuke.respawnTimer->reset();
               }
               if (snake.collide(frostNuke.collisionMask)) {
@@ -123,8 +124,9 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           FrostExplosion(frostExplosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
                   std::cout << "num of frostExplosions" << frostExplosion.size() << std::endl;
                   points = points + monkeyList.size();
-                  frostNuke.moveFrostNuke();
+                  frostNuke.moveFrostNukeOutside();
                   frostNuke.respawnTimer->reset();
+                  frostNuke.outsideTimer->reset();
               }
 
               BeginDrawing();
@@ -255,7 +257,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           pigList[i].update();
                       }
 
-                      static Timer timer(4000);
+                      static Timer timer(3000);
                       if (timer.isReady()) {
                           monkeyList.push_back(Malpa(monkeySprite));
                           if (timer.getLimit() > 200) {

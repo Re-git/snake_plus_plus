@@ -14,6 +14,7 @@ Snake::Snake(Texture2D snakeSprite ,int length)
     maxSpeed = 4;
     turnRate = 0.2;
     speedModifier = 0;
+    dangerMode = false;
     angle=0;
     for (int i = 0; i < length; ++i)
     {
@@ -41,7 +42,7 @@ void Snake::draw()
     }
         DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
                                      {position.x, position.y, headWidth, headHeight},
-                                     {headHeight/2,headHeight/2},0, WHITE);
+                                     {headHeight/2,headHeight/2},0, dangerMode ? BLUE : WHITE);
 }
 
 void Snake::move()

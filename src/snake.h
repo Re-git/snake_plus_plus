@@ -5,6 +5,7 @@
 #include "libs/raymath.h"
 #include <vector>
 #include <iostream>
+#include "snake.h"
 
 class Snake
 {
@@ -21,6 +22,7 @@ public:
     float angle;
     float turnRate;
     float speedModifier;
+    bool dangerMode;
     std::vector<Vector2> tail;
     Snake(Texture2D snakeSprite ,int length);
 

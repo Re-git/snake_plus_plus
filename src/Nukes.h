@@ -18,12 +18,15 @@ public:
     Area spawnArea;
     float nukeSize;
     float growing;
+    bool outside;
     Timer* respawnTimer;
+    Timer* outsideTimer;
     Rectangle collisionMask;
     Vector2 position;
     Nuke(Texture2D nukeSprite, Area gameArea);
     ~Nuke();
     void moveNuke();
+    void moveNukeOutside();
     void draw();
     void pulse(float, float);
 };
