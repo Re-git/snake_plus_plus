@@ -80,8 +80,12 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
   InitAudioDevice();
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
+  Music IGD = LoadMusicStream("assets/soundtrack/Cyberpunk_Moonlight_Sonata_v2.mp3"); //IGS-InGameSoundtrack
+  Music IGM = LoadMusicStream("assets/soundtrack/neogauge.mp3"); //IGS-InGameSoundtrack
   Sound GameOver= LoadSound("assets/voiceOver/game_over.ogg");
   SetMusicVolume(IGS, 0.2);
+  SetMusicVolume(IGD, 0.1);
+  SetMusicVolume(IGM, 0.1);
 
   // RANDOM NUMBERS
   srand(time(NULL));
@@ -105,6 +109,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
       switch (gameState) {
           // IN GAME STATE
           case inGameState:
+              StopMusicStream(IGD);
+              StopMusicStream(IGM);
               UpdateMusicStream(IGS);
               if (!(IsMusicPlaying(IGS))) {
                   UpdateMusicStream(IGS);
@@ -312,6 +318,12 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
 
                       // MAIN MENU STATE
                       case mainMenuState: {
+                            StopMusicStream(IGD);
+                            UpdateMusicStream(IGM);
+                            if (!(IsMusicPlaying(IGM))) {
+                                UpdateMusicStream(IGM);
+                                PlayMusicStream(IGM);
+                            }
                           // KEYBOARD INPUT
                           if (IsKeyDown(KEY_ENTER)) {
                               czas_punktowy.reset();
@@ -324,6 +336,12 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                       // DEATH SCREEN STATE
                       case deathScreenState:
                           StopMusicStream(IGS);
+                          StopMusicStream(IGM);
+                          UpdateMusicStream(IGD);
+                            if (!(IsMusicPlaying(IGD))) {
+                                UpdateMusicStream(IGD);
+                                PlayMusicStream(IGD);
+                            }
                           monkeyList.clear();
                           pigList.clear();
                           snake = Snake(snakeSprite, 15);
