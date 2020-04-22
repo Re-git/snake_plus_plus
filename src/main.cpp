@@ -30,6 +30,7 @@ int main(void){
   Area gameArea = {45, 85, 45, 85};
   gameState = mainMenuState;
   int pigToken = 0;
+  int aktualny_poziom = 0;
  
   // static Timer nieuzyte(10000);         // nieużyty timer nieużyte >.<
   static Timer frozenTimer(5000);
@@ -179,17 +180,12 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                   }
               }
 
-              for (size_t i = 0; i < monkeyList.size(); i++)
-                  for (size_t j = 0; j < pigList.size(); j++) {
-                          if (monkeyList[i].dead) {
-                              monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
-                          }
-
                           // WARUNEK ZMIANY TRUDNOŚCI - CO 100PKT
-                          int aktualny_poziom = 0;
+        
                           if (points > 99 + aktualny_poziom && points < 99 + aktualny_poziom + 12) {
                               aktualny_poziom += 100;
-                              wkurwiacz += 0.0015;
+                              wkurwiacz += 0.25;
+                            // std::cout << "ZWIEKSZONO POZIOM - " << aktualny_poziom << " " << wkurwiacz << std::endl;
                           }
 
                           if (points < 99) {
@@ -197,9 +193,23 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                               wkurwiacz = 1.5;
                           }
 
-                          monkeyList[i].maxspeed = wkurwiacz;
-                          pigList[j].maxspeed = wkurwiacz - 0.5;
+              for (size_t i = 0; i < monkeyList.size(); i++)
+                  for (size_t j = 0; j < pigList.size(); j++) {
+                          if (monkeyList[i].dead) {
+                              monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
+                          }
 
+
+                        if(monkeyList[i].frozen==0)
+                        {
+                          monkeyList[i].maxspeed = wkurwiacz;
+                        //   std::cout << monkeyList[i].maxspeed;
+                        }
+
+                        if(pigList[j].frozen==0)
+                        {
+                          pigList[j].maxspeed = wkurwiacz - 0.5;
+                        }
                           if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[j].pigRec)) {
                               gameState = deathScreenState;
                               PlaySound(GameOver);
@@ -315,7 +325,6 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           monkeyList.clear();
                           pigList.clear();
                           snake = Snake(snakeSprite, 15);
-                          SetTargetFPS(60);
                           fruit.moveFruit();
                           bullet.moveBulletTime();
                           nuke.moveNuke();
