@@ -6,7 +6,7 @@ SnekPac::SnekPac(Texture2D fruitSprite, Area gameArea) {
     fruitSize = 45;
     spawnArea = gameArea;
     respawnTimer = new Timer(10000);
-    outsideTimer = new Timer(40000);
+    outsideTimer = new Timer(30000);
     outside = false;
     growing = 0.5;
     modeActive = 0;
@@ -37,11 +37,11 @@ void SnekPac::moveSnekPacOutside() {
 
 void SnekPac::draw(Snake& snake,  int& points)
 {
-    if (outsideTimer -> isReady() && outside)
+    
+    if (outsideTimer -> isReady())
     {
         moveSnekPac();
-        outside = false;
-        respawnTimer -> reset();
+        outsideTimer -> reset();
     }
 
 
@@ -57,7 +57,7 @@ void SnekPac::draw(Snake& snake,  int& points)
         if(respawnTimer->isReady())
         {
             modeActive = 0;
-            moveSnekPac();
+            // moveSnekPac();
             snake.snekPacMode = 0;
             snake.dangerMode = 0;
             respawnTimer->reset();
