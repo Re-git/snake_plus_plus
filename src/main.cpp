@@ -78,7 +78,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
 
   // LOAD SOUNDS
   InitAudioDevice();
-  Sound Bomb = LoadSound("assets/sounds/Bomb.wav");
+  Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
   Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
   Sound Wre = LoadSound("assets/sounds/wreee.wav");
   Sound Eat = LoadSound("assets/sounds/eat.mp3");
