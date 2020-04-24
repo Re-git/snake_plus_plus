@@ -20,7 +20,7 @@ void Fruit::moveFruit() {
     position.y=((int)std::abs(spawnArea.top + rand() % (GetScreenHeight()-spawnArea.bottom-2*(int)fruitSize)));
     collisionMask= {position.x-fruitSize/2,position.y-fruitSize/2,fruitSize,fruitSize};
 }
-void Fruit::draw(Snake& snake, std::vector<Pig>& pigList,  int& points, Sound Eat)
+void Fruit::draw(Snake& snake, std::vector<Pig>& pigList,  int& points, Sound Eat, Sound Wre)
 {
     if(snake.collide(collisionMask))
         {
@@ -40,6 +40,7 @@ void Fruit::draw(Snake& snake, std::vector<Pig>& pigList,  int& points, Sound Ea
             points-=5;
             moveFruit();
             respawnTimer->reset();
+            PlaySoundMulti(Wre);
         }
     }
     

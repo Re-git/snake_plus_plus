@@ -300,7 +300,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                       snake.handleInput();
                       snake.update();
                       snake.draw();
-                      fruit.draw(snake, pigList, points, Eat);
+                      fruit.draw(snake, pigList, points, Eat, Wre);
                       nuke.draw();
                       frostNuke.draw();
                       bullet.draw(snake, points);
