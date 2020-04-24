@@ -78,6 +78,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
 
   // LOAD SOUNDS
   InitAudioDevice();
+  Sound Bomb = LoadSound("assets/sounds/Bomb.wav");
+  Sound Eat = LoadSound("assets/sounds/eat.mp3");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
   Music IGD = LoadMusicStream("assets/soundtrack/Cyberpunk_Moonlight_Sonata_v2.mp3"); //IGS-InGameSoundtrack
@@ -125,6 +127,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                   nuke.moveNukeOutside();
                   nuke.outsideTimer->reset();
                   nuke.respawnTimer->reset();
+                  PlaySoundMulti(Bomb);
               }
               if (snake.collide(frostNuke.collisionMask)) {
                   frostExplosion.push_back(
@@ -294,7 +297,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                       snake.handleInput();
                       snake.update();
                       snake.draw();
-                      fruit.draw(snake, pigList, points);
+                      fruit.draw(snake, pigList, points, Eat);
                       nuke.draw();
                       frostNuke.draw();
                       bullet.draw(snake, points);
@@ -410,6 +413,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           UnloadImage(ikona);
                           StopSoundMulti();
                           UnloadSound(BCS);
+                          UnloadSound(Eat);
+                          UnloadSound(Bomb);
                           UnloadSound(GameOver);
                           UnloadMusicStream(IGS);
                           CloseAudioDevice();

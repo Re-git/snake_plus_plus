@@ -23,7 +23,7 @@ public:
     Fruit(Texture2D fruitSprite ,Area gameArea);
     ~Fruit();
     void moveFruit();
-    void draw(Snake& snake, std::vector<Pig>& pigList, int& points);
+    void draw(Snake& snake, std::vector<Pig>& pigList, int& points, Sound Eat);
     void pulse(float, float);
 };
 
