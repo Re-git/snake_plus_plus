@@ -79,6 +79,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
   // LOAD SOUNDS
   InitAudioDevice();
   Sound Bomb = LoadSound("assets/sounds/Bomb.wav");
+  Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
+  Sound Wre = LoadSound("assets/sounds/wreee.wav");
   Sound Eat = LoadSound("assets/sounds/eat.mp3");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
@@ -137,6 +139,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                   frostNuke.moveFrostNukeOutside();
                   frostNuke.respawnTimer->reset();
                   frostNuke.outsideTimer->reset();
+                  PlaySoundMulti(frostBomb);
               }
 
               BeginDrawing();
@@ -413,8 +416,10 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           UnloadImage(ikona);
                           StopSoundMulti();
                           UnloadSound(BCS);
+                          UnloadSound(Wre);
                           UnloadSound(Eat);
                           UnloadSound(Bomb);
+                          UnloadSound(frostBomb);
                           UnloadSound(GameOver);
                           UnloadMusicStream(IGS);
                           CloseAudioDevice();
