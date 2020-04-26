@@ -249,10 +249,10 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                                pigList.erase(pigList.begin()+j);
                           }
 
-                                if ((snake.collide(monkeyList[i].monkeyRec)) || (snake.collide(pigList[j].pigRec)))
-                                    if(snekpac.modeActive==0)
+                            if(snekpac.modeActive==0)
+                            {
+                                if ((snake.collide(monkeyList[i].monkeyRec) && monkeyList[i].frozen==0) || (snake.collide(pigList[j].pigRec) && pigList[j].frozen==0))
                                 {
-                                    {
                                     gameState = deathScreenState;
                                     PlaySound(GameOver);
                                     bullet.N = 0;
@@ -261,9 +261,8 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                                     monkeyList[i].maxspeed = 1.5;
                                     bullet.penaltyValue = 0;
                                     pigList[j].maxspeed = 1;
-                                    }
                               }
-
+                            }
                                
                           }
                       }
@@ -423,6 +422,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadTexture(frostExplosionSprites[2]);
                           UnloadTexture(frostExplosionSprites[3]);
                           UnloadTexture(frostExplosionSprites[4]);
+                          UnloadTexture(snekPacSprite);
                           UnloadTexture(groundTiles[0]);
                           UnloadTexture(groundTiles[1]);
                           UnloadTexture(groundTiles[2]);

@@ -13,6 +13,7 @@ Pig::Pig(Texture2D monkeySprite) {
     dead = 0;
     frozen = 0;
     iloscZjedzonych = 0;
+    dinnerTime = false;
 }
 
 void Pig::draw() {

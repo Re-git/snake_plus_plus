@@ -7,7 +7,6 @@ SnekPac::SnekPac(Texture2D fruitSprite, Area gameArea) {
     spawnArea = gameArea;
     respawnTimer = new Timer(10000);
     outsideTimer = new Timer(30000);
-    outside = false;
     growing = 0.5;
     modeActive = 0;
     moveSnekPac();
@@ -27,7 +26,6 @@ void SnekPac::moveSnekPac() {
 }
 
 void SnekPac::moveSnekPacOutside() {
-    outside = true;
     position.x=-100;
     position.y=-100;
     collisionMask= {position.x-fruitSize/2,position.y-fruitSize/2,fruitSize,fruitSize};

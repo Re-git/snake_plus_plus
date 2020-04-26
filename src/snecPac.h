@@ -18,7 +18,6 @@ public:
     Area spawnArea;
     float fruitSize;
     float growing;
-    bool outside;
     bool modeActive;
     Timer* respawnTimer;
     Timer* outsideTimer;
