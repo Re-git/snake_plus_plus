@@ -5,6 +5,7 @@
 #include "libs/raymath.h"
 #include <ctime>
 #include "stdlib.h"
+#include "timer.h"
 #include <vector>
 
 
@@ -22,6 +23,7 @@ class Pig {
         Rectangle pigRec;
         Texture2D sprite;
         float iloscZjedzonych;
+        Timer* freeze_timer;
 
         Pig(Texture2D pigSprite);
         void draw();

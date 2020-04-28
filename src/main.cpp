@@ -33,7 +33,6 @@ int main(void){
   int pigToken = 0;
   int aktualny_poziom = 0;
  
-  static Timer frozenTimer(5000);
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -123,7 +122,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                   nuke.respawnTimer->reset();
               }
               if (snake.collide(frostNuke.collisionMask)) {
-                  frostExplosion.push_back(
+                  frostExplosion.emplace_back(
                           FrostExplosion(frostExplosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
                 //   std::cout << "num of frostExplosions" << frostExplosion.size() << std::endl;
                   points = points + monkeyList.size();
@@ -251,7 +250,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
                             if(snekpac.modeActive==0)
                             {
-                                if ((snake.collide(monkeyList[i].monkeyRec) && monkeyList[i].frozen==0) || (snake.collide(pigList[j].pigRec) && pigList[j].frozen==0))
+                                if ((snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)))
                                 {
                                     gameState = deathScreenState;
                                     PlaySound(GameOver);
@@ -273,17 +272,10 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               if (CheckCollisionCircleRec(frostExplosion[j].position,
                                                           frostExplosion[j].frostExplosionSize,
                                                           monkeyList[i].monkeyRec)) {
+                                  monkeyList[i].freeze_timer = new Timer{5000};
                                   monkeyList[i].frozen = 1;
                                   monkeyList[i].maxspeed = 0;
-                              }
-                          }
-                      }
-                      for (size_t i = 0; i < monkeyList.size(); i++) {
-                          if (monkeyList[i].frozen) {
-                              if (frozenTimer.isReady()) {
-                                  monkeyList[i].maxspeed = 1.5;   // freez monkeys
-                                  monkeyList[i].frozen = 0;
-                                 if(i==monkeyList.size()-1) frozenTimer.reset();
+                                //   std::cout << "WYKRYTO KOLIZJE Z MALPA PRZY FROST" << std::endl;
                               }
                           }
                           if (monkeyList[i].frozen != 1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
@@ -295,23 +287,16 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               if (CheckCollisionCircleRec(frostExplosion[j].position,
                                                           frostExplosion[j].frostExplosionSize,
                                                           pigList[i].pigRec)) {
+                                  pigList[i].freeze_timer = new Timer{5000};
                                   pigList[i].frozen = 1;
                                   pigList[i].maxspeed = 0;
-                              }
-                          }
-                      }
-
-                      for (size_t i = 0; i < pigList.size(); i++) {
-                          if (pigList[i].frozen) {
-                              if (frozenTimer.isReady()) {
-                                  pigList[i].maxspeed = 1;   // freez pigs
-                                  pigList[i].frozen = 0;
-                                if(i==pigList.size()-1) frozenTimer.reset();
-                              }
+                                //   std::cout << "WYKRYTO KOLIZJE ZE SWINIA PRZY FROST" << std::endl;
+                             }
                           }
                           if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
                           pigList[i].update();
                       }
+
 
                       static Timer timer(3000);
                       if (timer.isReady()) {
