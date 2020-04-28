@@ -1,4 +1,5 @@
 #include "monkey.h"
+#include "timer.h"
 #include <iostream>
 
 Malpa::Malpa(Texture2D monkeySprite)
@@ -15,6 +16,7 @@ Malpa::Malpa(Texture2D monkeySprite)
     maxSeekForce = 0.055;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
     dead = 0;
     frozen = 0;
+    freeze_timer = nullptr;
 }
 
 void Malpa::draw()
@@ -34,11 +36,20 @@ void Malpa::update()
     // Reset accelertion to 0 each cycle
     acceleration = Vector2Scale(acceleration,0);
     draw();
+    
+
     // maxspeed += 0.001;
     if (separationRange > 60)
     {
       separationRange -= 0.1;
-    }    
+    }
+
+    if(frozen==1 && freeze_timer->isReady())
+    {
+        frozen = 0;
+        maxspeed = 1.5;
+        delete freeze_timer;
+    }
 }
 
 

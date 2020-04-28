@@ -15,6 +15,7 @@ Snake::Snake(Texture2D snakeSprite ,int length)
     turnRate = 0.2;
     speedModifier = 0;
     dangerMode = false;
+    snekPacMode = false;
     angle=0;
     for (int i = 0; i < length; ++i)
     {
@@ -38,8 +39,9 @@ void Snake::draw()
     // Rysujemy snake'a
     for (size_t i = 1; i < tail.size(); ++i)
     {
-        DrawLineEx(Vector2{tail[i].x,tail[i].y},Vector2{tail[i-1].x,tail[i-1].y},25,Color{90,180,50,255});
-    }
+
+        DrawLineEx(Vector2{tail[i].x,tail[i].y},Vector2{tail[i-1].x,tail[i-1].y},25,snekPacMode ? RED : Color{90,180,50,255});
+    }        
         DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
                                      {position.x, position.y, headWidth, headHeight},
                                      {headHeight/2,headHeight/2},0, dangerMode ? BLUE : WHITE);
@@ -128,3 +130,4 @@ void Snake::limitAngle(float aLimit)
         angle = angle + 2*PI;
     }
 }
+

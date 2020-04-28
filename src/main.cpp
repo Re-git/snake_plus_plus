@@ -19,6 +19,7 @@
 #include "FrostExplosion.h"
 #include "FrostNuke.h"
 #include "pig.h"
+#include "snecPac.h"
 
 GameState gameState;
 
@@ -32,8 +33,6 @@ int main(void){
   int pigToken = 0;
   int aktualny_poziom = 0;
  
-  // static Timer nieuzyte(10000);         // nieużyty timer nieużyte >.<
-  static Timer frozenTimer(5000);
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
   static Timer czas_trudnosci(100000);   // ZMIANA TILESA
   static int frameCounter, points, rodzaj;
@@ -75,6 +74,7 @@ Texture2D fenceSprite = LoadTexture("assets/sprites/tiles/bush_pionowy.png");
 Texture2D fenceSprite_side = LoadTexture("assets/sprites/tiles/bush_poziomy.png");
 Texture2D fenceSprite_side_rotated = LoadTexture("assets//sprites/tiles/bush_poziomy_odbity.png");
 Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.png"),LoadTexture("assets/sprites/powerups/bluepill2.png")};
+Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
@@ -106,6 +106,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
   Fruit fruit(fruitSprite, gameArea);
   Bullet bullet(bulletTimeSprite, gameArea);
   Nuke nuke(nukeSprite, gameArea);
+  SnekPac snekpac(snekPacSprite, gameArea);
   Gui gui;
 
   // MAIN LOOP
@@ -134,15 +135,24 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                   PlaySoundMulti(Bomb);
               }
               if (snake.collide(frostNuke.collisionMask)) {
-                  frostExplosion.push_back(
+                  frostExplosion.emplace_back(
                           FrostExplosion(frostExplosionSprites, snake.position.x, snake.position.y, snake.tail.size()));
-                  std::cout << "num of frostExplosions" << frostExplosion.size() << std::endl;
+                //   std::cout << "num of frostExplosions" << frostExplosion.size() << std::endl;
                   points = points + monkeyList.size();
                   frostNuke.moveFrostNukeOutside();
                   frostNuke.respawnTimer->reset();
                   frostNuke.outsideTimer->reset();
                   PlaySoundMulti(frostBomb);
               }
+
+                if(snake.collide(snekpac.collisionMask))
+                {
+                snekpac.modeActive = true;
+                snekpac.moveSnekPacOutside();
+                snekpac.respawnTimer->reset();
+                snekpac.outsideTimer->reset(); 
+                }
+
 
               BeginDrawing();
               ClearBackground(BLACK);
@@ -209,11 +219,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                               wkurwiacz = 1.5;
                           }
 
-              for (size_t i = 0; i < monkeyList.size(); i++)
+              for (size_t i = 0; i < monkeyList.size(); i++){
                   for (size_t j = 0; j < pigList.size(); j++) {
-                          if (monkeyList[i].dead) {
-                              monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
-                          }
 
 
                         if(monkeyList[i].frozen==0)
@@ -226,32 +233,63 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                         {
                           pigList[j].maxspeed = wkurwiacz - 0.5;
                         }
-                          if (snake.collide(monkeyList[i].monkeyRec) || snake.collide(pigList[j].pigRec)) {
-                              gameState = deathScreenState;
-                              PlaySound(GameOver);
-                              bullet.N = 0;
-                              bullet.podniesiony = 0;
-                              monkeyList[i].maxspeed = 1.5;
-                              bullet.penaltyValue = 0;
-                              pigList[j].maxspeed = 1;
+                            if(snekpac.modeActive == 1)
+                            {
+                               if (snake.collide(monkeyList[i].monkeyRec))
+                                {
+                                    points+=10;
+                                    monkeyList[i].dead = 1;
+
+                                }
+
+                               if (snake.collide(pigList[j].pigRec))
+                               {
+            
+                                    points+=10;
+                                    pigList[j].dead = 1;
+                                    pigToken = 0;
+                               }
+
+                            } 
+
+                          if (monkeyList[i].dead) 
+                          {
+                              monkeyList.erase(monkeyList.begin() + i); // Remove dead monkeys
+                          }
+
+                          if (pigList[j].dead) 
+                          {
+                               pigList.erase(pigList.begin()+j);
+                          }
+
+                            if(snekpac.modeActive==0)
+                            {
+                                if ((snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)))
+                                {
+                                    gameState = deathScreenState;
+                                    PlaySound(GameOver);
+                                    bullet.N = 0;
+                                    snekpac.modeActive = 0;
+                                    bullet.podniesiony = 0;
+                                    monkeyList[i].maxspeed = 1.5;
+                                    bullet.penaltyValue = 0;
+                                    pigList[j].maxspeed = 1;
+                              }
+                            }
+                               
                           }
                       }
+                            // std::cout << snekpac.modeActive << std::endl;  
+
                       for (size_t i = 0; i < monkeyList.size(); i++) {
                           for (size_t j = 0; j < frostExplosion.size(); j++) {
                               if (CheckCollisionCircleRec(frostExplosion[j].position,
                                                           frostExplosion[j].frostExplosionSize,
                                                           monkeyList[i].monkeyRec)) {
+                                  monkeyList[i].freeze_timer = new Timer{5000};
                                   monkeyList[i].frozen = 1;
                                   monkeyList[i].maxspeed = 0;
-                              }
-                          }
-                      }
-                      for (size_t i = 0; i < monkeyList.size(); i++) {
-                          if (monkeyList[i].frozen) {
-                              if (frozenTimer.isReady()) {
-                                  monkeyList[i].maxspeed = 1.5;   // freez monkeys
-                                  monkeyList[i].frozen = 0;
-                                 if(i==monkeyList.size()-1) frozenTimer.reset();
+                                //   std::cout << "WYKRYTO KOLIZJE Z MALPA PRZY FROST" << std::endl;
                               }
                           }
                           if (monkeyList[i].frozen != 1) monkeyList[i].applyBehaviors(monkeyList, snake.position);
@@ -263,23 +301,16 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                               if (CheckCollisionCircleRec(frostExplosion[j].position,
                                                           frostExplosion[j].frostExplosionSize,
                                                           pigList[i].pigRec)) {
+                                  pigList[i].freeze_timer = new Timer{5000};
                                   pigList[i].frozen = 1;
                                   pigList[i].maxspeed = 0;
-                              }
-                          }
-                      }
-
-                      for (size_t i = 0; i < pigList.size(); i++) {
-                          if (pigList[i].frozen) {
-                              if (frozenTimer.isReady()) {
-                                  pigList[i].maxspeed = 1;   // freez pigs
-                                  pigList[i].frozen = 0;
-                                if(i==pigList.size()-1) frozenTimer.reset();
-                              }
+                                //   std::cout << "WYKRYTO KOLIZJE ZE SWINIA PRZY FROST" << std::endl;
+                             }
                           }
                           if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
                           pigList[i].update();
                       }
+
 
                       static Timer timer(3000);
                       if (timer.isReady()) {
@@ -306,6 +337,9 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                       nuke.draw();
                       frostNuke.draw();
                       bullet.draw(snake, points, bulletIn, bulletOut);
+                      snekpac.draw(snake, points);
+                      bullet.draw(snake, points);
+          
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
                           explosions[i].update();
@@ -355,6 +389,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           snake = Snake(snakeSprite, 15);
                           fruit.moveFruit();
                           bullet.moveBulletTime();
+                          snekpac.moveSnekPac();
                           nuke.moveNuke();
                           frostNuke.moveFrostNuke();
                           gui.drawDeathMenu(points, frameCounter, gameState);
@@ -400,6 +435,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           UnloadTexture(frostExplosionSprites[2]);
                           UnloadTexture(frostExplosionSprites[3]);
                           UnloadTexture(frostExplosionSprites[4]);
+                          UnloadTexture(snekPacSprite);
                           UnloadTexture(groundTiles[0]);
                           UnloadTexture(groundTiles[1]);
                           UnloadTexture(groundTiles[2]);
