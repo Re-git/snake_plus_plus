@@ -5,6 +5,7 @@
 #include "libs/raymath.h"
 #include <ctime>
 #include "stdlib.h"
+#include "timer.h"
 #include <vector>
 
 
@@ -21,6 +22,7 @@ public:
     float maxSeekForce;
     int dead;
     int frozen;
+    Timer* freeze_timer;
     Rectangle monkeyRec;
     Texture2D sprite;
 

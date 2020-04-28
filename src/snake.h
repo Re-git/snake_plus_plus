@@ -23,6 +23,7 @@ public:
     float turnRate;
     float speedModifier;
     bool dangerMode;
+    bool snekPacMode;
     std::vector<Vector2> tail;
     Snake(Texture2D snakeSprite ,int length);
 

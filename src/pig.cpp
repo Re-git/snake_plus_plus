@@ -13,6 +13,7 @@ Pig::Pig(Texture2D monkeySprite) {
     dead = 0;
     frozen = 0;
     iloscZjedzonych = 0;
+    freeze_timer = nullptr;
 }
 
 void Pig::draw() {
@@ -31,6 +32,12 @@ void Pig::update() {
     acceleration = Vector2Scale(acceleration, 0);
     draw();
     // maxspeed += 0.001;
+    if(frozen==1 && freeze_timer->isReady())
+    {
+        frozen = 0;
+        maxspeed = 1.5;
+         delete freeze_timer;
+    }
 }
 bool Pig::collide(Rectangle rec) {
     if (CheckCollisionRecs(pigRec, rec)) {
