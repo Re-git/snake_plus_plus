@@ -35,7 +35,7 @@ void Bullet::draw(Snake& snake, int& points, Sound bulletIn, Sound bulletOut)
   
     if(snake.collide(collisionMask) && podniesiony == false)
     {
-        PlaySound(bulletIn);
+        PlaySoundMulti(bulletIn);
         N=1;
         moveBulletTime();
         outsideTimer->reset();
@@ -61,7 +61,7 @@ void Bullet::draw(Snake& snake, int& points, Sound bulletIn, Sound bulletOut)
 
     if(snake.collide(collisionMask) && podniesiony == true)
     {
-        PlaySound(bulletOut);
+        PlaySoundMulti(bulletOut);
         N=0;
         moveBulletTimeOutside();
         outside = true;

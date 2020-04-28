@@ -338,7 +338,6 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                       frostNuke.draw();
                       bullet.draw(snake, points, bulletIn, bulletOut);
                       snekpac.draw(snake, points);
-                      bullet.draw(snake, points);
           
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
