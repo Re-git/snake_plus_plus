@@ -16,6 +16,7 @@ Malpa::Malpa(Texture2D monkeySprite)
     maxSeekForce = 0.055;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
     dead = 0;
     frozen = 0;
+    freeze_timer = nullptr;
 }
 
 void Malpa::draw()
