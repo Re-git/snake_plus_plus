@@ -80,6 +80,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
   InitAudioDevice();
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
   Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
+  Sound bulletIn = LoadSound("assets/sounds/bullet_in.wav");
+  Sound bulletOut = LoadSound("assets/sounds/bullet_out.wav");
   Sound Wre = LoadSound("assets/sounds/wreee.wav");
   Sound Eat = LoadSound("assets/sounds/eat.mp3");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
@@ -303,7 +305,7 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                       fruit.draw(snake, pigList, points, Eat, Wre);
                       nuke.draw();
                       frostNuke.draw();
-                      bullet.draw(snake, points);
+                      bullet.draw(snake, points, bulletIn, bulletOut);
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
                           explosions[i].update();
@@ -420,6 +422,8 @@ Texture2D bulletTimeSprite[2] = {LoadTexture("assets/sprites/powerups/redpill2.p
                           UnloadSound(Eat);
                           UnloadSound(Bomb);
                           UnloadSound(frostBomb);
+                          UnloadSound(bulletIn);
+                          UnloadSound(bulletOut);
                           UnloadSound(GameOver);
                           UnloadMusicStream(IGS);
                           CloseAudioDevice();
