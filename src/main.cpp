@@ -19,6 +19,7 @@
 #include "FrostExplosion.h"
 #include "FrostNuke.h"
 #include "pig.h"
+#include "MotoMoto.h"
 #include "snecPac.h"
 
 GameState gameState;
@@ -52,6 +53,7 @@ int main(void){
 Texture2D fruitSprite = LoadTexture("assets/sprites/food/owocek.png");
 Texture2D monkeySprite = LoadTexture("assets/sprites/enemies/malpa_angry.png");
 Texture2D pigSprite = LoadTexture("assets/sprites/enemies/pig_angry.png");
+Texture2D motoMotoSprite = LoadTexture("assets/sprites/enemies/hippo.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
@@ -94,6 +96,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
   Snake snake(snakeSprite, 15);
   std::vector<Malpa> monkeyList;
   std::vector<Pig> pigList;
+  std::vector<MotoMoto> hippoList;
   std::vector<Explosion> explosions;
   std::vector<FrostExplosion> frostExplosion;
   FrostNuke frostNuke(frostNukeSprite, gameArea);
@@ -415,6 +418,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadTexture(fruitSprite);
                           UnloadTexture(nukeSprite);
                           UnloadTexture(pigSprite);
+                          UnloadTexture(motoMotoSprite);
                           UnloadTexture(frostNukeSprite);
                           UnloadTexture(explosionSprites[1]);
                           UnloadTexture(explosionSprites[2]);
