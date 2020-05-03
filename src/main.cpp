@@ -21,6 +21,7 @@
 #include "pig.h"
 #include "MotoMoto.h"
 #include "snecPac.h"
+#include "Shoot.h"
 
 GameState gameState;
 
@@ -32,6 +33,7 @@ int main(void){
   Area gameArea = {45, 85, 45, 85};
   gameState = mainMenuState;
   int pigToken = 0;
+  int hippoToken = 0;
   int aktualny_poziom = 0;
  
   static Timer czas_punktowy(5000);     // RESPAWN OWOCKA
@@ -57,6 +59,7 @@ Texture2D motoMotoSprite = LoadTexture("assets/sprites/enemies/hippo.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
+Texture2D kissSprite = LoadTexture("assets/sprites/effects/kiss.png");
 explosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
 explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
 explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
@@ -188,15 +191,22 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
               for (size_t i = 0; i < monkeyList.size(); i++) { // Check if monkeys are hit by explosion
                   for (size_t j = 0; j < explosions.size(); j++) {
                       for (size_t k = 0; k < pigList.size(); k++) {
-                          if (CheckCollisionCircleRec(explosions[j].position, explosions[j].explosionSize,
-                                                      monkeyList[i].monkeyRec)) {
-                              monkeyList[i].dead = 1;
-                          }
-                          if (CheckCollisionCircleRec(explosions[j].position, explosions[j].explosionSize,
-                                                      pigList[k].pigRec)) {
-                              pigToken = 0;
-                              pigList.clear();
-                          }
+                          for (size_t l = 0; l < hippoList.size(); ++l) {
+                              if (CheckCollisionCircleRec(explosions[j].position, explosions[j].explosionSize,
+                                  monkeyList[i].monkeyRec)) {
+                                  monkeyList[i].dead = 1;
+                              }
+                              if (CheckCollisionCircleRec(explosions[j].position, explosions[j].explosionSize,
+                                  pigList[k].pigRec)) {
+                                  pigToken = 0;
+                                  pigList.clear();
+                              }
+                              if (CheckCollisionCircleRec(explosions[j].position, explosions[j].explosionSize,
+                                  hippoList[l].motoMotoRec)) {
+                                  hippoToken = 0;
+                                  hippoList.clear();
+                              }
+                          } 
                       }
                   }
               }
@@ -227,6 +237,10 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                         if(pigList[j].frozen==0)
                         {
                           pigList[j].maxspeed = wkurwiacz - 0.5;
+                        }
+                        if (hippoList[j].frozen == 0)
+                        {
+                            hippoList[j].maxspeed = wkurwiacz - 0.5;
                         }
                             if(snekpac.modeActive == 1)
                             {
@@ -259,8 +273,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
                             if(snekpac.modeActive==0)
                             {
-                                if ((snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)))
-                                {
+                                if (/*(snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)) || */((snake.collide(hippoList[j].motoMotoRec)) && (hippoList[j].frozen == 0))) {
                                     gameState = deathScreenState;
                                     PlaySound(GameOver);
                                     bullet.N = 0;
@@ -269,7 +282,8 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                                     monkeyList[i].maxspeed = 1.5;
                                     bullet.penaltyValue = 0;
                                     pigList[j].maxspeed = 1;
-                              }
+                                    hippoList[j].maxspeed = 1;
+                                }
                             }
                                
                           }
@@ -305,6 +319,29 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           if (pigList[i].frozen != 1) pigList[i].applyBehaviors(pigList, fruit.position);
                           pigList[i].update();
                       }
+                      for (size_t i = 0; i < hippoList.size(); i++) { // Check if hippos are hit by frostExplosion
+                          for (size_t j = 0; j < frostExplosion.size(); j++) {
+                              if (CheckCollisionCircleRec(frostExplosion[j].position,
+                                  frostExplosion[j].frostExplosionSize,
+                                  hippoList[i].motoMotoRec)) {
+                                  hippoList[i].freeze_timer = new Timer{ 5000 };
+                                  hippoList[i].frozen = 1;
+                                  hippoList[i].maxspeed = 0;
+                                  //   std::cout << "WYKRYTO KOLIZJE Z MOToMOTO PRZY FROST" << std::endl;
+                              }
+                          }
+                          if (hippoList[i].frozen != 1) {
+                              static Timer hippo_move_timer(1000);
+                              if (hippo_move_timer.isReady()) {
+                                  hippoList[i].applyBehaviors(hippoList);
+                                  if (hippo_move_timer.getLimit() > 200) {
+                                      hippo_move_timer.setLimit(hippo_move_timer.getLimit() - 1);
+                                  }
+                                  hippo_move_timer.reset();
+                              }
+                          }
+                          hippoList[i].update();
+                      }
 
 
                       static Timer timer(3000);
@@ -323,6 +360,15 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           }
                           pig_timer.reset();
                           pigToken = 1;
+                      }
+                      static Timer hippo_timer(5000);
+                      if (hippo_timer.isReady() && hippoToken != 1) {
+                          hippoList.push_back(MotoMoto(motoMotoSprite));
+                          if (hippo_timer.getLimit() > 200) {
+                              hippo_timer.setLimit(hippo_timer.getLimit() - 1);
+                          }
+                          hippo_timer.reset();
+                          hippoToken = 1;
                       }
 
                       snake.handleInput();
@@ -379,6 +425,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                             }
                           monkeyList.clear();
                           pigList.clear();
+                          hippoList.clear();
                           snake = Snake(snakeSprite, 15);
                           fruit.moveFruit();
                           bullet.moveBulletTime();
@@ -401,6 +448,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               wkurwiacz = 1.5;
                               points = 0;
                               pigToken = 0;
+                              hippoToken = 0;
                               frameCounter = 0;
                               rodzaj = 0;
                               bullet.N = 0;
@@ -419,6 +467,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadTexture(nukeSprite);
                           UnloadTexture(pigSprite);
                           UnloadTexture(motoMotoSprite);
+                          UnloadTexture(kissSprite);
                           UnloadTexture(frostNukeSprite);
                           UnloadTexture(explosionSprites[1]);
                           UnloadTexture(explosionSprites[2]);

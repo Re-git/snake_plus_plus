@@ -1,4 +1,4 @@
-#include "pig.h"
+    #include "pig.h"
 #include <iostream>
 
 Pig::Pig(Texture2D pigSprite) {

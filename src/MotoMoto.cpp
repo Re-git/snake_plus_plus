@@ -6,13 +6,14 @@ MotoMoto::MotoMoto(Texture2D motoMotoSprite) {
     position = createPosition();
     velocity = Vector2{ 0,0 };
     acceleration = Vector2{ 0,0 };
-    width = 50;
-    height = 50;
-    maxspeed = 1;
+    width = 100;
+    height = 100;
+    maxspeed = 3;
     maxSeekForce = 0.055;
     dead = 0;
     frozen = 0;
     freeze_timer = nullptr;
+
 }
 
 void MotoMoto::draw()
@@ -70,7 +71,7 @@ void MotoMoto::applyBehaviors(std::vector<MotoMoto>& hippo) {
 }
 
 void MotoMoto::shoot() {
-    Vector2 target = createPosition();
+    //Vector2 target = createPosition();
 
 }
 // A method that calculates a steering force towards a target
