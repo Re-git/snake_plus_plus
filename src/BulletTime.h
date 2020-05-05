@@ -27,7 +27,7 @@ public:
     ~Bullet();
     void moveBulletTime();
     void moveBulletTimeOutside();
-    void draw(Snake& snake, int& points);
+    void draw(Snake& snake, int& points, Sound bulletIn, Sound bulletOut);
     void pulse(float, float);
 };
 

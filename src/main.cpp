@@ -78,6 +78,12 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
+  Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
+  Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
+  Sound bulletIn = LoadSound("assets/sounds/bullet_in.wav");
+  Sound bulletOut = LoadSound("assets/sounds/bullet_out.wav");
+  Sound Wre = LoadSound("assets/sounds/wreee.wav");
+  Sound Eat = LoadSound("assets/sounds/eat.mp3");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
   Music IGD = LoadMusicStream("assets/soundtrack/Cyberpunk_Moonlight_Sonata_v2.mp3"); //IGS-InGameSoundtrack
@@ -126,6 +132,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                   nuke.moveNukeOutside();
                   nuke.outsideTimer->reset();
                   nuke.respawnTimer->reset();
+                  PlaySoundMulti(Bomb);
               }
               if (snake.collide(frostNuke.collisionMask)) {
                   frostExplosion.emplace_back(
@@ -135,6 +142,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                   frostNuke.moveFrostNukeOutside();
                   frostNuke.respawnTimer->reset();
                   frostNuke.outsideTimer->reset();
+                  PlaySoundMulti(frostBomb);
               }
 
                 if(snake.collide(snekpac.collisionMask))
@@ -325,11 +333,12 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                       snake.handleInput();
                       snake.update();
                       snake.draw();
-                      fruit.draw(snake, pigList, points);
+                      fruit.draw(snake, pigList, points, Eat, Wre);
                       nuke.draw();
                       frostNuke.draw();
+                      bullet.draw(snake, points, bulletIn, bulletOut);
                       snekpac.draw(snake, points);
-                      bullet.draw(snake, points);
+          
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
                           explosions[i].update();
@@ -444,6 +453,12 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadImage(ikona);
                           StopSoundMulti();
                           UnloadSound(BCS);
+                          UnloadSound(Wre);
+                          UnloadSound(Eat);
+                          UnloadSound(Bomb);
+                          UnloadSound(frostBomb);
+                          UnloadSound(bulletIn);
+                          UnloadSound(bulletOut);
                           UnloadSound(GameOver);
                           UnloadMusicStream(IGS);
                           CloseAudioDevice();
