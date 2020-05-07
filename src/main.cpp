@@ -78,13 +78,13 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
-  Sound EatPM = LoadSound("assets/sounds/pacman_eat.wav");
+  Sound EatPM = LoadSound("assets/sounds/eatPM.wav");
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
   Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
   Sound bulletIn = LoadSound("assets/sounds/bullet_in.wav");
   Sound bulletOut = LoadSound("assets/sounds/bullet_out.wav");
   Sound Wre = LoadSound("assets/sounds/wreee.wav");
-  Sound Eat = LoadSound("assets/sounds/eat.wav");
+  Sound Eat = LoadSound("assets/sounds/eat.mp3");
   Sound BCS = LoadSound("assets/sounds/phaseJump1.ogg");  //BCS-BorderCollisionSound
   Music IGS = LoadMusicStream("assets/soundtrack/if_you_dont_love_me.mp3"); //IGS-InGameSoundtrack
   Music IGD = LoadMusicStream("assets/soundtrack/Cyberpunk_Moonlight_Sonata_v2.mp3"); //IGS-InGameSoundtrack
