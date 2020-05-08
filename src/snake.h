@@ -22,6 +22,8 @@ public:
     float angle;
     float turnRate;
     float speedModifier;
+    int charm;
+    Color color;
     bool dangerMode;
     bool snekPacMode;
     std::vector<Vector2> tail;

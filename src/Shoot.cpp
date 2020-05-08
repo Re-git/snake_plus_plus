@@ -82,7 +82,28 @@ Vector2 Shoot::seek(Vector2 target) {
 }
 Vector2 Shoot::createPosition() {
     Vector2 vec;
-    vec.y = rand() % GetScreenHeight();
-    vec.x = rand() % GetScreenWidth();
+    int roll = GetRandomValue(1, 4);
+    switch (roll)
+    {
+    case 1:
+        vec.x = -width;
+        vec.y = rand() % GetScreenHeight();
+        break;
+    case 2:
+        vec.x = rand() % GetScreenWidth();
+        vec.y = -height;
+        break;
+    case 3:
+        vec.x = GetScreenWidth() + width;
+        vec.y = rand() % GetScreenHeight();
+        break;
+    case 4:
+        vec.x = rand() % GetScreenWidth();
+        vec.y = GetScreenHeight() + height;
+        break;
+
+    default:
+        break;
+    }
     return vec;
 }

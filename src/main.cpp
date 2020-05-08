@@ -283,7 +283,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
                             if(snekpac.modeActive==0)
                             {
-                                if (/*(snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)) || */((snake.collide(hippoList[j].motoMotoRec)) && (hippoList[j].frozen == 0))) {
+                                if ((snake.collide(monkeyList[i].monkeyRec)&&monkeyList[i].frozen==0) || ((snake.collide(pigList[j].pigRec)) && (pigList[j].frozen==0)) || ((snake.collide(hippoList[j].motoMotoRec)) && (hippoList[j].frozen == 0))) {
                                     gameState = deathScreenState;
                                     PlaySound(GameOver);
                                     bullet.N = 0;
@@ -341,7 +341,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               }
                           }
                           if (hippoList[i].frozen != 1) {
-                              static Timer hippo_move_timer(10000);
+                              static Timer hippo_move_timer(8000);
                               if (hippo_move_timer.isReady()) {
 
                                   hippoList[i].applyBehaviors(hippoList);
@@ -355,8 +355,17 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           }
                           hippoList[i].update();
                       }
+                      
+                      /*static Timer kiss_timer(10000);
+                      if (kiss_timer.isReady()) {
 
+                          
 
+                          if (kiss_timer.getLimit() > 200) {
+                              kiss_timer.setLimit(kiss_timer.getLimit() - 1);
+                          }
+                         kiss_timer.reset();
+                      }*/
                       static Timer timer(3000);
                       if (timer.isReady()) {
                           monkeyList.push_back(Malpa(monkeySprite));
@@ -383,6 +392,18 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           hippo_timer.reset();
                           hippoToken = 1;
                       }
+                      if (snake.charm == 1) {
+                          static Timer charm_timer(10000);
+                          if (charm_timer.isReady() && snake.charm == 1) {
+                              snake.maxSpeed = snake.maxSpeed * 2;
+                              snake.charm = 0;
+                              //std::cout << "charm off" << std::endl;
+                              if (charm_timer.getLimit() > 200) {
+                                  charm_timer.setLimit(charm_timer.getLimit() - 1);
+                              }
+                              charm_timer.reset();
+                          }
+                      }
 
                       snake.handleInput();
                       snake.update();
@@ -393,22 +414,25 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                       snekpac.draw(snake, points);
                       bullet.draw(snake, points);
                       for (size_t i = 0; i < kissList.size(); ++i) {
+                          
 
-                          if (kissList[i].dead==1) {
-                              kissList.erase(kissList.begin() + i);
-                          }
-
-                          if (kissList[0].collide({kissList[i].direction.x,kissList[i].direction.y,10 })) {
+                          if (kissList[0].collide({ kissList[i].direction.x,kissList[i].direction.y,10 })) {
                               kissList[i].dead = 1;
                           }
-                          else if (snake.collide(kissList[i].kissRec)) {
-                              //dodać charm
-                              kissList[i].dead = 1;
-                          }
+                          else if (snake.collide(kissList[i].kissRec) && snake.charm == 0) {
 
+                              kissList[i].dead = 1;
+                              snake.maxSpeed = snake.maxSpeed / 2;
+                              snake.charm = 1;
+                              //std::cout << "charm on" << std::endl;
+
+                          }
                           kissList[i].applyBehaviors(kissList);
                           kissList[i].draw();
                           kissList[i].update();
+                          if (kissList[i].dead == 1) {
+                              kissList.erase(kissList.begin() + i);
+                          }
                          
                       }
                       for (size_t i = 0; i < explosions.size(); i++) {
@@ -425,7 +449,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               frostExplosion.erase(frostExplosion.begin() + i);
                           }
                       }
-
+                      
                       EndDrawing();
                       break;
 
@@ -458,6 +482,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           monkeyList.clear();
                           pigList.clear();
                           hippoList.clear();
+                          kissList.clear();
                           snake = Snake(snakeSprite, 15);
                           fruit.moveFruit();
                           bullet.moveBulletTime();

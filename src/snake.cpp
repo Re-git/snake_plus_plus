@@ -16,7 +16,10 @@ Snake::Snake(Texture2D snakeSprite ,int length)
     speedModifier = 0;
     dangerMode = false;
     snekPacMode = false;
+    color = WHITE;
     angle=0;
+    charm = 0;
+
     for (int i = 0; i < length; ++i)
     {
         tail.push_back(Vector2{position.x, position.y});
@@ -41,10 +44,13 @@ void Snake::draw()
     {
 
         DrawLineEx(Vector2{tail[i].x,tail[i].y},Vector2{tail[i-1].x,tail[i-1].y},25,snekPacMode ? RED : Color{90,180,50,255});
-    }        
+    }
+    if ((dangerMode == 0) && (charm == 0)) { color = WHITE; }
+    else if (dangerMode == 1) { color = BLUE; }
+    else if ((dangerMode == 0) && (charm == 1)) { color = RED; };
         DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
                                      {position.x, position.y, headWidth, headHeight},
-                                     {headHeight/2,headHeight/2},0, dangerMode ? BLUE : WHITE);
+                                     {headHeight/2,headHeight/2},0, color);
 }
 
 void Snake::move()
