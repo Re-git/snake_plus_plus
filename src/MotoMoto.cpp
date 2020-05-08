@@ -49,7 +49,6 @@ bool MotoMoto::collide(Rectangle rec) {
     }
 }
 
-
 void MotoMoto::applyForce(Vector2 force) {
     // We could add mass here if we want A = F / M
     acceleration = Vector2Add(acceleration, force);
@@ -69,11 +68,6 @@ void MotoMoto::applyBehaviors(std::vector<MotoMoto>& hippo) {
     seekForce = Vector2Scale(seekForce, 1);
     applyForce(seekForce);
 }
-
-void MotoMoto::shoot() {
-    //Vector2 target = createPosition();
-
-}
 // A method that calculates a steering force towards a target
 // STEER = DESIRED MINUS VELOCITY
 Vector2 MotoMoto::seek(Vector2 target) {
@@ -90,6 +84,7 @@ Vector2 MotoMoto::seek(Vector2 target) {
 }
 Vector2 MotoMoto::createPosition() {
     Vector2 vec;
+   
     int roll = GetRandomValue(1, 4);
     switch (roll)
     {

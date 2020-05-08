@@ -59,7 +59,7 @@ Texture2D motoMotoSprite = LoadTexture("assets/sprites/enemies/hippo.png");
 Texture2D snakeSprite = LoadTexture("assets/sprites/character/snake.png");
 Texture2D nukeSprite = LoadTexture("assets/sprites/powerups/3.png");
 Texture2D explosionSprites[5];
-Texture2D kissSprite = LoadTexture("assets/sprites/effects/kiss.png");
+Texture2D kissSprite = LoadTexture("assets/sprites/enemies/kiss.png");
 explosionSprites[0] = LoadTexture("assets/sprites/effects/explosion1.png");
 explosionSprites[1] = LoadTexture("assets/sprites/effects/explosion2.png");
 explosionSprites[2] = LoadTexture("assets/sprites/effects/explosion3.png");
@@ -100,6 +100,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
   std::vector<Malpa> monkeyList;
   std::vector<Pig> pigList;
   std::vector<MotoMoto> hippoList;
+  std::vector<Shoot> kissList;
   std::vector<Explosion> explosions;
   std::vector<FrostExplosion> frostExplosion;
   FrostNuke frostNuke(frostNukeSprite, gameArea);
@@ -223,10 +224,19 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               aktualny_poziom = 0;
                               wkurwiacz = 1.5;
                           }
+              
 
               for (size_t i = 0; i < monkeyList.size(); i++){
                   for (size_t j = 0; j < pigList.size(); j++) {
 
+                        //checks if monkey got kissed
+                        for (size_t k = 0; k < kissList.size(); ++k) {
+                            if (kissList[k].collide(monkeyList[i].monkeyRec)) {
+                                monkeyList[i].maxspeed = monkeyList[i].maxspeed * 2;
+                                monkeyList[i].buffed = 1;
+                                kissList[i].dead = 1;
+                            }
+                        }
 
                         if(monkeyList[i].frozen==0)
                         {
@@ -331,9 +341,12 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                               }
                           }
                           if (hippoList[i].frozen != 1) {
-                              static Timer hippo_move_timer(1000);
+                              static Timer hippo_move_timer(10000);
                               if (hippo_move_timer.isReady()) {
+
                                   hippoList[i].applyBehaviors(hippoList);
+                                  kissList.push_back(Shoot(kissSprite, hippoList[0].position));
+
                                   if (hippo_move_timer.getLimit() > 200) {
                                       hippo_move_timer.setLimit(hippo_move_timer.getLimit() - 1);
                                   }
@@ -379,6 +392,25 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                       frostNuke.draw();
                       snekpac.draw(snake, points);
                       bullet.draw(snake, points);
+                      for (size_t i = 0; i < kissList.size(); ++i) {
+
+                          if (kissList[i].dead==1) {
+                              kissList.erase(kissList.begin() + i);
+                          }
+
+                          if (kissList[0].collide({kissList[i].direction.x,kissList[i].direction.y,10 })) {
+                              kissList[i].dead = 1;
+                          }
+                          else if (snake.collide(kissList[i].kissRec)) {
+                              //dodać charm
+                              kissList[i].dead = 1;
+                          }
+
+                          kissList[i].applyBehaviors(kissList);
+                          kissList[i].draw();
+                          kissList[i].update();
+                         
+                      }
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
                           explosions[i].update();
@@ -434,7 +466,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           frostNuke.moveFrostNuke();
                           gui.drawDeathMenu(points, frameCounter, gameState);
 
-                          if (IsKeyDown(KEY_ENTER)) {
+                          if (IsKeyDown(KEY_ENTER)) {   
                               gameState = inGameState;
                           }
 

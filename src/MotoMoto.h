@@ -23,7 +23,6 @@ class MotoMoto{
         Rectangle motoMotoRec;
         Texture2D sprite;
         Timer* freeze_timer;
-       
         MotoMoto(Texture2D motoMotoSprite);
         void draw();
         void update();
@@ -31,7 +30,6 @@ class MotoMoto{
         void applyForce(Vector2);
         void applyBehaviors(std::vector<MotoMoto>&);
         bool collide(Rectangle rec);
-        void shoot();
         Vector2 createPosition();
         Vector2 seek(Vector2);
 };

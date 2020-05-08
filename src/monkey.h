@@ -22,6 +22,8 @@ public:
     float maxSeekForce;
     int dead;
     int frozen;
+    int buffed;
+    Color color;
     Timer* freeze_timer;
     Rectangle monkeyRec;
     Texture2D sprite;

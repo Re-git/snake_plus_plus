@@ -16,14 +16,20 @@ Malpa::Malpa(Texture2D monkeySprite)
     maxSeekForce = 0.055;               // siła z jaką małpki zmieniają swoją trajektorie żeby podążać za graczem
     dead = 0;
     frozen = 0;
+    buffed = 0;
+    color = WHITE;
     freeze_timer = nullptr;
 }
 
 void Malpa::draw()
 {
+    if ((frozen == 0) && (buffed == 0)) { color = WHITE; }
+    else if (frozen != 0) { color = SKYBLUE; }
+    else if ((frozen == 0) && (buffed == 1)) { color = PURPLE; };
+
     monkeyRec = {position.x,position.y,width, height};
     DrawTexturePro(sprite, {0.0f, 0.0f, (float)sprite.width, (float)sprite.height},
-                        monkeyRec, {0.0f, 0.0f},0.0f, (frozen==0) ? WHITE : SKYBLUE);
+                        monkeyRec, {0.0f, 0.0f},0.0f, color);
 }
 
 void Malpa::update()
