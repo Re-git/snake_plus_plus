@@ -78,7 +78,6 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
-  Sound EatPM = LoadSound("assets/sounds/eatPac.wav");
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
   Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
   Sound bulletIn = LoadSound("assets/sounds/bullet_in.wav");
