@@ -33,7 +33,7 @@ void SnekPac::moveSnekPacOutside() {
     respawnTimer -> reset();
 }
 
-void SnekPac::draw(Snake& snake,  int& points)
+void SnekPac::draw(Snake& snake,  int& points, Sound pacIn, Sound pacOut)
 {
     
     if (outsideTimer -> isReady())
@@ -41,7 +41,8 @@ void SnekPac::draw(Snake& snake,  int& points)
         moveSnekPac();
         outsideTimer -> reset();
     }
-
+    if(snake.collide(collisionMask) && modeActive==false)
+        PlaySound(pacOut);
 
     if(modeActive==true)
     {
@@ -55,6 +56,7 @@ void SnekPac::draw(Snake& snake,  int& points)
         if(respawnTimer->isReady())
         {
             modeActive = 0;
+            PlaySound(pacIn);
             // moveSnekPac();
             snake.snekPacMode = 0;
             snake.dangerMode = 0;

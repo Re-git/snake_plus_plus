@@ -78,6 +78,8 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
+  Sound pacOut = LoadSound("assets/sounds/Nani.mp3");
+  Sound pacIn = LoadSound("assets/sounds/PACin.mp3");
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
   Sound frostBomb = LoadSound("assets/sounds/laser4.ogg");
   Sound bulletIn = LoadSound("assets/sounds/bullet_in.wav");
@@ -337,7 +339,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                       nuke.draw();
                       frostNuke.draw();
                       bullet.draw(snake, points, bulletIn, bulletOut);
-                      snekpac.draw(snake, points);
+                      snekpac.draw(snake, points, pacIn, pacOut);
           
                       for (size_t i = 0; i < explosions.size(); i++) {
                           explosions[i].draw();
@@ -452,6 +454,8 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadTexture(fenceSprite_side_rotated);
                           UnloadImage(ikona);
                           StopSoundMulti();
+                          UnloadSound(pacOut);
+                          UnloadSound(pacIn);
                           UnloadSound(BCS);
                           UnloadSound(Wre);
                           UnloadSound(Eat);
