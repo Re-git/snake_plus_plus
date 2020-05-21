@@ -78,6 +78,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
+  Sound eatPM = LoadSound("assets/sounds/eatPM.wav");
   Sound pacOut = LoadSound("assets/sounds/Nani.mp3");
   Sound pacIn = LoadSound("assets/sounds/PACin.mp3");
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
@@ -239,6 +240,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                             {
                                if (snake.collide(monkeyList[i].monkeyRec))
                                 {
+                                    PlaySound(eatPM);
                                     points+=10;
                                     monkeyList[i].dead = 1;
 
@@ -246,7 +248,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
                                if (snake.collide(pigList[j].pigRec))
                                {
-            
+                                    PlaySound(eatPM);
                                     points+=10;
                                     pigList[j].dead = 1;
                                     pigToken = 0;
@@ -454,6 +456,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
                           UnloadTexture(fenceSprite_side_rotated);
                           UnloadImage(ikona);
                           StopSoundMulti();
+                          UnloadSound(eatPM);
                           UnloadSound(pacOut);
                           UnloadSound(pacIn);
                           UnloadSound(BCS);
