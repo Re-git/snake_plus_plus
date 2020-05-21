@@ -78,7 +78,7 @@ Texture2D snekPacSprite = LoadTexture("assets/sprites/powerups/death.png");
 
   // LOAD SOUNDS
   InitAudioDevice();
-  Sound eatPM = LoadSound("assets/sounds/eatPM.wav");
+  Sound eatPM = LoadSound("assets/sounds/391659__jeckkech__consumption.wav");
   Sound pacOut = LoadSound("assets/sounds/Nani.mp3");
   Sound pacIn = LoadSound("assets/sounds/PACin.mp3");
   Sound Bomb = LoadSound("assets/sounds/Bomb.mp3");
