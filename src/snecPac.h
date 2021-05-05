@@ -27,7 +27,7 @@ public:
     ~SnekPac();
     void moveSnekPac();
     void moveSnekPacOutside();
-    void draw(Snake& snake, int& points);
+    void draw(Snake& snake, int& points, Sound pacIn, Sound pacOut);
     void pulse(float, float);
 };
 
